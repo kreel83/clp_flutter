@@ -144,10 +144,16 @@ class _CollectesState extends State<Collectes> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: const Text('Liste des collections'),
+      ),
       body: BuildListCollecte(context),
       floatingActionButton: FloatingActionButton(
+        // child: const Icon(Icons.add),
         child: const Icon(Icons.add),
+        backgroundColor: Colors.black26,
+        
+        
         onPressed: () {
 
           _addCollecte();

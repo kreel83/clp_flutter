@@ -81,62 +81,63 @@ class _LogInScreen extends State<LogInScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xff000725),
+      backgroundColor: const Color(0xff000725),
       body: ListView(
         children: [
           Container(
             width: double.infinity,
             height: 180,
-            child: Padding(
+            
+            decoration: const BoxDecoration(
+                color: Color.fromARGB(255, 29, 86, 166),
+                borderRadius:
+                    BorderRadius.only(bottomRight: Radius.circular(150))),
+                    child: Padding(
               padding: EdgeInsets.fromLTRB(20, 70, 20, 50),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
+                  const Text(
                     'C.L.P',
-                    style: TextStyle(
+                    style: const TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
                         fontSize: 25),
                   ),
-                  Text(
+                  const Text(
                     'Connectez-vous',
                     style: TextStyle(color: Colors.white),
                   )
                 ],
               ),
             ),
-            decoration: BoxDecoration(
-                color: Color.fromARGB(255, 29, 86, 166),
-                borderRadius:
-                    BorderRadius.only(bottomRight: Radius.circular(150))),
           ),
           Theme(
             data: ThemeData(
               hintColor: Colors.blue,
             ),
             child: Padding(
-              padding: EdgeInsets.only(top: 50, right: 20, left: 20),
+              padding: const EdgeInsets.only(top: 50, right: 20, left: 20),
               child: TextFormField(
                 controller: emailController,
-                style: TextStyle(color: Colors.white),
+                style: const TextStyle(color: Colors.white),
                 decoration: InputDecoration(
                   labelText: "email",
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(15),
-                      borderSide: BorderSide(
+                      borderSide: const BorderSide(
                           color: Color.fromARGB(255, 29, 86, 166), width: 1)),
                   disabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(15),
-                      borderSide: BorderSide(
+                      borderSide: const BorderSide(
                           color: Color.fromARGB(255, 29, 86, 166), width: 1)),
                   enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(15),
-                      borderSide: BorderSide(
+                      borderSide: const BorderSide(
                           color: Color.fromARGB(255, 29, 86, 166), width: 1)),
                   focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(15),
-                      borderSide: BorderSide(
+                      borderSide: const BorderSide(
                           color: Color.fromARGB(255, 29, 86, 166), width: 1)),
                 ),
               ),
@@ -147,33 +148,33 @@ class _LogInScreen extends State<LogInScreen> {
               hintColor: Colors.blue,
             ),
             child: Padding(
-              padding: EdgeInsets.only(top: 20, right: 20, left: 20),
+              padding: const EdgeInsets.only(top: 20, right: 20, left: 20),
               child: TextFormField(
                 controller: passwordController,
-                style: TextStyle(color: Colors.white),
+                style: const TextStyle(color: Colors.white),
                 decoration: InputDecoration(
                   labelText: "password",
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(15),
-                      borderSide: BorderSide(
+                      borderSide: const BorderSide(
                           color: Color.fromARGB(255, 29, 86, 166), width: 1)),
                   disabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(15),
-                      borderSide: BorderSide(
+                      borderSide: const BorderSide(
                           color: Color.fromARGB(255, 29, 86, 166), width: 1)),
                   enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(15),
-                      borderSide: BorderSide(
+                      borderSide: const BorderSide(
                           color: Color.fromARGB(255, 29, 86, 166), width: 1)),
-                  focusedBorder: OutlineInputBorder(
+                  focusedBorder:  OutlineInputBorder(
                       borderRadius: BorderRadius.circular(15),
-                      borderSide: BorderSide(
+                      borderSide: const BorderSide(
                           color: Color.fromARGB(255, 29, 86, 166), width: 1)),
                 ),
               ),
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 10,
           ),
           Padding(
@@ -182,14 +183,13 @@ class _LogInScreen extends State<LogInScreen> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 InkWell(
-                  onTap: () {
-                    print('mot de passe');
+                  onTap: () {                   
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => ForgetPasswordScreen()));
+                            builder: (context) => const ForgetPasswordScreen()));
                   },
-                  child: Text(
+                  child: const Text(
                     'Mot de passe oublié ?',
                     style: TextStyle(
                         color: Color.fromARGB(255, 29, 86, 166), fontSize: 10),
@@ -198,7 +198,7 @@ class _LogInScreen extends State<LogInScreen> {
               ],
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 20,
           ),
           Padding(
@@ -216,33 +216,13 @@ class _LogInScreen extends State<LogInScreen> {
                   child: Center(child: Text('log in')),
                 ),
               )),
-          SizedBox(
+          const SizedBox(
             height: 50,
           ),
-          SizedBox(
+          const SizedBox(
             height: 20,
           ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                "Don't have an account ?",
-                style: TextStyle(color: Colors.white, fontSize: 16),
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              Text(
-                "Sign up",
-                style: TextStyle(color: Colors.blue, fontSize: 16),
-              ),
-              Container(
-                width: 55,
-                height: 1,
-                color: Colors.blue,
-              )
-            ],
-          ),
+
         ],
       ),
     );
