@@ -126,7 +126,7 @@ class _ImageUploadState extends State<ImageUpload> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('PDF Viewer'),
+          title: const Text('Gestion des photos'),
           actions: [
             IconButton(
                 onPressed: () {
@@ -154,7 +154,12 @@ class _ImageUploadState extends State<ImageUpload> {
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: GridView.builder(
+                  child: imageFileList!.isEmpty 
+                  ? Padding(
+                    padding: const EdgeInsets.all(80.0),
+                    child: Center(child: Text('Zone de téléchagement. Cliquez sur le bouton [ + ] pour ajouter des photos')),
+                  ) 
+                  : GridView.builder(
                       itemCount: imageFileList!.length,
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 2,
