@@ -5,6 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:convert';
 import '../../globals.dart' as globals;
 import 'package:http/http.dart' as http;
+import 'package:fluttertoast/fluttertoast.dart';
 
 class ImageUpload extends StatefulWidget {
   const ImageUpload(
@@ -79,46 +80,40 @@ class _ImageUploadState extends State<ImageUpload> {
     }
   }
 
-//   Future<void> sendImageToAPI(File imageFile, typeDepot, idMission) async {
-//   var uri = Uri.parse('http://mesprojets-laravel.mborgna.vigilience.corp/api/clp/mission/setPicture'); // Replace with your API endpoint
+  sendImageToAPISolo(List<XFile> imageFile, typeDepot, mission, index) async {
+    var uri = Uri.parse(
+        'https://www.la-gazette-eco.fr/api/clp/mission/setPicture'); // Replace with your API endpoint
 
-//   var request = http.MultipartRequest('POST', uri);
-
-//   request.headers['authorization'] = 'Bearer ${globals.token}';
-//   request.headers['Content-Type'] = 'image/jpeg';
-//   request.fields['type'] = typeDepot;
-//   request.fields['mission'] = idMission.toString();
-//   request.fields['name'] = imageFile.path.split(Platform.pathSeparator).last;
-//   var bytes = File(imageFile.path).readAsBytesSync();
-//   request.fields['image'] = base64Encode(bytes);
-//   // request.files.add(
-//   //   http.MultipartFile.fromBytes(
-//   //     'image', File(imageFile.path).readAsBytesSync(),
-//   //     filename: 'image.jpg'
-
-//   //     ));
-
-//   try {
-//     var response = await request.send();
-//     var r = await http.Response.fromStream(response);
-//     if (response.statusCode == 200) {
-//       print(r.body);
-//       print('Image uploaded successfully');
-
-//     } else {
-//       print('Failed to upload image. Status code: ${response.statusCode}');
-//     }
-//   } catch (e) {
-//     print('Error uploading image: $e');
-//   }
-// }
+    XFile e = imageFileList![index];
+    var request = http.MultipartRequest('POST', uri);
+    print('index :' + index.toString());
+    setState(() {
+      afficheCircles[index] = true;
+    });
+    request.headers['authorization'] = 'Bearer ${globals.token}';
+    request.headers['Content-Type'] = 'image/jpeg';
+    request.fields['type'] = typeDepot;
+    request.fields['mission'] = mission.id.toString();
+    var bytes = File(e.path).readAsBytesSync();
+    request.fields['image'] = base64Encode(bytes);
+    try {
+      var response = await request.send();
+      var r = await http.Response.fromStream(response);
+      if (response.statusCode == 200) {
+        setState(() {
+          afficheCircles[index] = false;
+        });
+      } else {
+        print('Failed to upload image. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error uploading image: $e');
+    }
+  }
 
   @override
   void initState() {
     super.initState();
-    // ignore: null_argument_to_non_null_type
-    // _imageFile = Future.value(null);
-    //imageFileList
     imageFileList = [];
   }
 
@@ -126,7 +121,7 @@ class _ImageUploadState extends State<ImageUpload> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('PDF Viewer'),
+          title: const Text('Liste des documents'),
           actions: [
             IconButton(
                 onPressed: () {
@@ -153,33 +148,96 @@ class _ImageUploadState extends State<ImageUpload> {
             children: [
               Expanded(
                 child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: GridView.builder(
-                      itemCount: imageFileList!.length,
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          crossAxisSpacing: 8,
-                          mainAxisSpacing: 8),
-                      itemBuilder: (BuildContext context, int index) {
-                        return Stack(
-                          alignment: Alignment.center,
-                          children: [
-                            Opacity(
-                              opacity:
-                                  (!afficheCircles[index] && afficheCirclesAll)
-                                      ? 0.5
-                                      : 1,
-                              child: Image.file(
-                                File(imageFileList![index].path),
-                                fit: BoxFit.cover,
-                              ),
+                    padding: const EdgeInsets.all(8.0),
+                    child: imageFileList == null || imageFileList!.isEmpty
+                        ? Center(
+                            child: Text(
+                              'Aucun document sélectionné\n cliquez sur + pour ajouter un document',
+                              style: TextStyle(fontSize: 24),
+                              textAlign: TextAlign.center,
                             ),
-                            if (!afficheCircles[index] && afficheCirclesAll)
-                              const CircularProgressIndicator()
-                          ],
-                        );
-                      }),
-                ),
+                          )
+                        : GridView.builder(
+                            itemCount: imageFileList!.length,
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 2,
+                                    crossAxisSpacing: 8,
+                                    mainAxisSpacing: 8),
+                            itemBuilder: (BuildContext context, int index) {
+                              return GestureDetector(
+                                onLongPress: () {
+                                  showModalBottomSheet(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return Container(
+                                        height: 200,
+                                        child: Column(
+                                          children: <Widget>[
+                                            ListTile(
+                                              leading: Icon(Icons.share),
+                                              title: Text('Télécharger'),
+                                              onTap: () {
+                                                sendImageToAPISolo(
+                                                    imageFileList!,
+                                                    widget.typeDepot,
+                                                    widget.idMission,
+                                                    index);
+                                                // Action pour partager
+                                                Navigator.pop(context);
+                                              },
+                                            ),
+                                            ListTile(
+                                              leading: Icon(Icons.delete),
+                                              title: Text('Supprimer'),
+                                              onTap: () {
+                                                setState(() {
+                                                  imageFileList!
+                                                      .removeAt(index);
+                                                  afficheCircles
+                                                      .removeAt(index);
+                                                });
+                                                // Action pour supprimer
+                                                Navigator.pop(context);
+                                                Fluttertoast.showToast(
+                                                  msg:
+                                                      "Image retirée avec succès",
+                                                  toastLength:
+                                                      Toast.LENGTH_SHORT,
+                                                  gravity: ToastGravity.BOTTOM,
+                                                  timeInSecForIosWeb: 1,
+                                                  backgroundColor: Colors.red,
+                                                  textColor: Colors.white,
+                                                  fontSize: 16.0,
+                                                );
+                                              },
+                                            ),
+                                          ],
+                                        ),
+                                      );
+                                    },
+                                  );
+                                },
+                                child: Stack(
+                                  alignment: Alignment.center,
+                                  children: [
+                                    Opacity(
+                                      opacity: (!afficheCircles[index] &&
+                                              afficheCirclesAll)
+                                          ? 0.5
+                                          : 1,
+                                      child: Image.file(
+                                        File(imageFileList![index].path),
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                    if (!afficheCircles[index] &&
+                                        afficheCirclesAll)
+                                      const CircularProgressIndicator()
+                                  ],
+                                ),
+                              );
+                            })),
               ),
             ],
           ),
