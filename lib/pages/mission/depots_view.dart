@@ -38,7 +38,6 @@ class _DepotsViewState extends State<DepotsView> {
 
   void _pickerImageFromGallery() async {
     final returnedImage =
-        
         await ImagePicker().pickImage(source: ImageSource.gallery);
     if (returnedImage != null) {
       print(returnedImage!.path);
@@ -69,59 +68,65 @@ class _DepotsViewState extends State<DepotsView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: widget.mission.statut == "encours" ? FloatingActionButton(
-        child: const Icon(Icons.add),
-        
-        onPressed: () {
-          print('press');
-          print(widget.mission);
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) =>
-                    
-                    ImageUpload(typeDepot: 'depots', idMission: widget.mission))); 
-          // _pickerImageFromGallery();
-        },
-      ): null,
-      body: Column(
-        children: [
-          FutureBuilder(
-              future: getDeps(widget.mission),
-              builder: (context, AsyncSnapshot snapshot) {
-                if (!snapshot.hasData) {
-                  return const Center(child: CircularProgressIndicator());
-                } else {
-                  final missions = snapshot.data;
-                  return ListView.builder(
-                      scrollDirection: Axis.vertical,
-                      shrinkWrap: true,
-                      padding: const EdgeInsets.all(8.0),
-                      itemCount: missions.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return Card(
-                          child: ListTile(
-                            onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          PhotoPage(collecte: widget.collecte, depot: missions[index]),
-                                          ),
-                              );
-                              setState(() {
-                                print('deleted file');
-                              });
-                            },
-                            leading: const Icon(FontAwesomeIcons.envelope),
-                            title: Text(missions[index].documentName),
-                          ),
-                        );
-                      });
-                }
-              }),
-        ],
-      ),
+
+      floatingActionButton: widget.mission.statut == "encours"
+          ? FloatingActionButton(
+              child: const Icon(Icons.add),
+              onPressed: () {
+                print('press');
+                print(widget.mission);
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => ImageUpload(
+                            typeDepot: 'depots', idMission: widget.mission)));
+                // _pickerImageFromGallery();
+              },
+            )
+          : null,
+      body: FutureBuilder(
+          future: getDeps(widget.mission),
+          builder: (context, AsyncSnapshot snapshot) {
+            if (!snapshot.hasData) {
+              return const Center(child: CircularProgressIndicator());
+            } else {
+              final missions = snapshot.data;
+              if (snapshot.data!.isEmpty) {
+                return const Center(
+                    child: Text(
+                  'Aucun document déposé !',
+                  style: TextStyle(fontSize: 20),
+                ));
+              }
+              return ListView.builder(
+                  scrollDirection: Axis.vertical,
+                  shrinkWrap: true,
+                  padding: const EdgeInsets.all(8.0),
+                  itemCount: missions.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return Card(
+                      child: ListTile(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => PhotoPage(
+                                  collecte: widget.collecte,
+                                  depot: missions[index]),
+                            ),
+                          );
+                          setState(() {
+                            print('deleted file');
+                          });
+                        },
+                        leading: const Icon(FontAwesomeIcons.envelope),
+                        title: Text(missions[index].documentName),
+                      ),
+                    );
+                  });
+            }
+          }),
+
     );
   }
 }

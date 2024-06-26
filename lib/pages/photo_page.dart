@@ -28,19 +28,16 @@ class PhotoPage extends StatefulWidget {
 }
 
 class _PhotoPageState extends State<PhotoPage> {
-
-
   Future<void> deletePhoto(depot) async {
-      var headers = {
-            'authorization': 'Bearer ${globals.token}',
-            'Content-Type': 'application/json;charset=UTF-8',
-            'Charset': 'utf-8'
-          };
-
+    var headers = {
+      'authorization': 'Bearer ${globals.token}',
+      'Content-Type': 'application/json;charset=UTF-8',
+      'Charset': 'utf-8'
+    };
 
     var client = http.Client();
-    var uri =
-        Uri.parse('http://mesprojets-laravel.mborgna.vigilience.corp/api/clp/mission/deletePhoto');
+    var uri = Uri.parse(
+        'http://mesprojets-laravel.mborgna.vigilience.corp/api/clp/mission/deletePhoto');
     var response = await client.post(uri,
         headers: headers,
         body: jsonEncode({
@@ -50,23 +47,15 @@ class _PhotoPageState extends State<PhotoPage> {
           'file': depot.documentName
         }));
 
- 
-      if (response.statusCode == 200) {
-          print(response.body);
+    if (response.statusCode == 200) {
+      print(response.body);
 
-              // ignore: use_build_context_synchronously
-              Navigator.of(context).pop(); // Ferme la boîte de dialogue
-              // ignore: use_build_context_synchronously
-              Navigator.of(context).pop(); // Ferme la boîte de dialogue
-      
+      // ignore: use_build_context_synchronously
+      Navigator.pop(context, true); // Ferme la boîte de dialogue
     } else {
       throw Exception('Failed to load items');
     }
-
-
   }
-
-
 
   Future<Uint8List?> getPhoto(depot) async {
     var headers = {
@@ -74,7 +63,6 @@ class _PhotoPageState extends State<PhotoPage> {
       'Content-Type': 'application/json;charset=UTF-8',
       'Charset': 'utf-8'
     };
-
 
     var client = http.Client();
     var uri =
@@ -106,34 +94,33 @@ class _PhotoPageState extends State<PhotoPage> {
   }
 
   void _showConfirmationDialog(BuildContext context) {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: Text('Confirmation'),
-        content: Text('Voulez-vous supprimer cette photo ?'),
-        actions: <Widget>[
-          TextButton(
-            child: Text('Annuler'),
-            onPressed: () {
-              Navigator.of(context).pop(); // Ferme la boîte de dialogue
-            },
-          ),
-          TextButton(
-            child: Text('Confirmer'),
-            onPressed: () {
-              print('presssseeeddddd');
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Confirmation'),
+          content: Text('Voulez-vous supprimer cette photo ?'),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Annuler'),
+              onPressed: () {
+                Navigator.of(context).pop(); // Ferme la boîte de dialogue
+              },
+            ),
+            TextButton(
+              child: Text('Confirmer'),
+              onPressed: () {
+                print('presssseeeddddd');
 
-              // Mettez ici votre logique pour ce qui doit se passer après la confirmation
-              deletePhoto(widget.depot);
-
-            },
-          ),
-        ],
-      );
-    },
-  );
-}
+                // Mettez ici votre logique pour ce qui doit se passer après la confirmation
+                deletePhoto(widget.depot);
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -141,20 +128,22 @@ class _PhotoPageState extends State<PhotoPage> {
         appBar: AppBar(
           title: Text(widget.depot.documentName),
           actions: [
-            if (widget.depot.deletable) 
-          IconButton(onPressed: () {
-             _showConfirmationDialog(context);
-          }, icon: Icon(Icons.delete_outline))
-        ],
+            if (widget.depot.deletable)
+              IconButton(
+                  onPressed: () {
+                    _showConfirmationDialog(context);
+                  },
+                  icon: Icon(Icons.delete_outline))
+          ],
         ),
         // ignore: unnecessary_null_comparison
         body: Container(
           child: PhotoView(
-            imageProvider: NetworkImage('${'http://surveilleco.vigilience.corp/collectes/'+widget.collecte.toString()+'/missions/'+widget.depot.missionId.toString()+'/'+widget.depot.type}s/'+widget.depot.documentName,
+            imageProvider: NetworkImage(
+              '${'http://surveilleco.vigilience.corp/collectes/' + widget.collecte.toString() + '/missions/' + widget.depot.missionId.toString() + '/' + widget.depot.type}s/' +
+                  widget.depot.documentName,
+            ),
           ),
-
-          ),
-        )
-            );
+        ));
   }
 }

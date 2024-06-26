@@ -83,9 +83,11 @@ class _DiscussionsViewState extends State<DiscussionsView> {
                   return const Center(child: CircularProgressIndicator());
                 } else {
                   if (!snapshot.hasData) {
-                    return Container(
-                      child: Text('Aucune discussion'),
-                    );
+                    return Center(
+                        child: Text(
+                      'Commencez votre discussion !',
+                      style: TextStyle(fontSize: 20),
+                    ));
                   } else {
                     final discussions = snapshot.data;
                     print(discussions);
