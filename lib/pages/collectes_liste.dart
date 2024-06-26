@@ -145,13 +145,14 @@ class _CollectesState extends State<Collectes> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         title: const Text('Liste des collections'),
       ),
       body: BuildListCollecte(context),
       floatingActionButton: FloatingActionButton(
         // child: const Icon(Icons.add),
         child: const Icon(Icons.add),
-        backgroundColor: Colors.black26,
+        
         
         
         onPressed: () {
@@ -166,7 +167,7 @@ class _CollectesState extends State<Collectes> {
           children: <Widget>[
             DrawerHeader(
               decoration: BoxDecoration(
-                color: Colors.blue,
+                color: globals.mainColor,
               ),
               child: Text(
                 'CLP',
@@ -179,6 +180,7 @@ class _CollectesState extends State<Collectes> {
             Column(
               children: [
                 SizedBox(
+                  height: globals.espacement,
                   child: CheckboxListTile(
                     title: Text('En cours'),
                     value: condition['1'],
@@ -190,6 +192,7 @@ class _CollectesState extends State<Collectes> {
                   ),
                 ),
                 SizedBox(
+                  height: globals.espacement,
                   child: CheckboxListTile(
                     title: Text('Annulée'),
                     value: condition['2'],
@@ -201,6 +204,7 @@ class _CollectesState extends State<Collectes> {
                   ),
                 ),
                 SizedBox(
+                  height: globals.espacement,
                   child: CheckboxListTile(
                     title: Text('Refusée'),
                     value: condition['3'],
@@ -212,6 +216,7 @@ class _CollectesState extends State<Collectes> {
                   ),
                 ),
                 SizedBox(
+                  height: globals.espacement,
                   child: CheckboxListTile(
                     title: Text('Validée'),
                     value: condition['4'],
@@ -223,6 +228,7 @@ class _CollectesState extends State<Collectes> {
                   ),
                 ),
                 SizedBox(
+                  height: globals.espacement,
                   child: CheckboxListTile(
                     title: Text('Payée'),
                     value: condition['5'],

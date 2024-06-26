@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:convert';
 import '../../globals.dart' as globals;
+import '../utils/alert.dart';
 import 'package:http/http.dart' as http;
 import 'package:fluttertoast/fluttertoast.dart';
 
@@ -63,12 +64,15 @@ class _ImageUploadState extends State<ImageUpload> {
       request.fields['mission'] = mission.id.toString();
       var bytes = File(e.path).readAsBytesSync();
       request.fields['image'] = base64Encode(bytes);
+          setState(() {
+            afficheCircles[index] = true;
+          });
       try {
         var response = await request.send();
         var r = await http.Response.fromStream(response);
         if (response.statusCode == 200) {
           setState(() {
-            afficheCircles[index] = true;
+            afficheCircles[index] = false;
           });
         } else {
           print('Failed to upload image. Status code: ${response.statusCode}');
@@ -82,7 +86,7 @@ class _ImageUploadState extends State<ImageUpload> {
 
   sendImageToAPISolo(List<XFile> imageFile, typeDepot, mission, index) async {
     var uri = Uri.parse(
-        'https://www.la-gazette-eco.fr/api/clp/mission/setPicture'); // Replace with your API endpoint
+        'http://mesprojets-laravel.mborgna.vigilience.corp/api/clp/mission/setPicture'); // Replace with your API endpoint
 
     XFile e = imageFileList![index];
     var request = http.MultipartRequest('POST', uri);
@@ -98,7 +102,7 @@ class _ImageUploadState extends State<ImageUpload> {
     request.fields['image'] = base64Encode(bytes);
     try {
       var response = await request.send();
-      var r = await http.Response.fromStream(response);
+      print('response : '+response.toString());
       if (response.statusCode == 200) {
         setState(() {
           afficheCircles[index] = false;
@@ -152,7 +156,7 @@ class _ImageUploadState extends State<ImageUpload> {
 
                     padding: const EdgeInsets.all(8.0),
                     child: imageFileList == null || imageFileList!.isEmpty
-                        ? Center(
+                        ? const Center(
                             child: Text(
                               'Aucun document sélectionné\n cliquez sur + pour ajouter un document',
                               style: TextStyle(fontSize: 24),
@@ -188,6 +192,7 @@ class _ImageUploadState extends State<ImageUpload> {
                                                     index);
                                                 // Action pour partager
                                                 Navigator.pop(context);
+                                                Alert.showToast("Document téléchargé avec succès");
                                               },
                                             ),
                                             ListTile(
@@ -202,17 +207,8 @@ class _ImageUploadState extends State<ImageUpload> {
                                                 });
                                                 // Action pour supprimer
                                                 Navigator.pop(context);
-                                                Fluttertoast.showToast(
-                                                  msg:
-                                                      "Image retirée avec succès",
-                                                  toastLength:
-                                                      Toast.LENGTH_SHORT,
-                                                  gravity: ToastGravity.BOTTOM,
-                                                  timeInSecForIosWeb: 1,
-                                                  backgroundColor: Colors.red,
-                                                  textColor: Colors.white,
-                                                  fontSize: 16.0,
-                                                );
+                                                Alert.showToast("Image retirée avec succès");
+                                                
                                               },
                                             ),
                                           ],
@@ -234,8 +230,7 @@ class _ImageUploadState extends State<ImageUpload> {
                                         fit: BoxFit.cover,
                                       ),
                                     ),
-                                    if (!afficheCircles[index] &&
-                                        afficheCirclesAll)
+                                    if (afficheCircles[index])
                                       const CircularProgressIndicator()
                                   ],
                                 ),

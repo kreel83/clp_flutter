@@ -3,6 +3,7 @@ import 'package:clp_flutter/models/ville.dart';
 import 'package:clp_flutter/pages/missions_liste.dart';
 import 'package:clp_flutter/services/collectes_service.dart';
 import 'package:clp_flutter/services/mission_service.dart';
+import 'package:clp_flutter/utils/alert.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 // import 'package:my_app/services/menu/menuCategorie_liste_service.dart';
@@ -173,12 +174,15 @@ var headers = {
           MaterialPageRoute(
               builder: (context) => Missions(
                   collecte: collecte)));
+                  Alert.showToast("Remontée d'information créée");
     }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: const Text('Choisissez une commune'),
+      ),
       body: Column(
         children: [
           Padding(padding: EdgeInsets.all(8.0),

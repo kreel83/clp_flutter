@@ -6,6 +6,7 @@ import 'package:clp_flutter/pages/mission/depots_view.dart';
 import 'package:clp_flutter/pages/mission/discussions_view.dart';
 import 'package:clp_flutter/pages/mission/mission_view.dart';
 import 'package:clp_flutter/services/depots_service.dart';
+import 'package:clp_flutter/utils/alert.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -14,6 +15,7 @@ import '../../globals.dart' as globals;
 import 'package:http/http.dart' as http;
 import 'package:photo_view/photo_view.dart';
 import 'package:dio/dio.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 // import '../../models/fiche.dart';
 
@@ -114,6 +116,8 @@ class _PhotoPageState extends State<PhotoPage> {
 
                 // Mettez ici votre logique pour ce qui doit se passer après la confirmation
                 deletePhoto(widget.depot);
+                  Navigator.pop(context, true);
+                  Alert.showToast('Document supprimé avec succés');
               },
             ),
           ],

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import './pages/login.dart';
 import 'package:flutter/services.dart';
+import './globals.dart' as globals;
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,9 +20,50 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Application CLP',
       theme: ThemeData(
-        primarySwatch: Colors.amber,
+// Définir les couleurs principales de l'application
+        primarySwatch: Colors.blue,
+        scaffoldBackgroundColor: Colors.grey[100],
+
+        // Définir les styles de texte
+        textTheme: const TextTheme(
+          displayLarge: TextStyle(fontSize: 72.0, fontWeight: FontWeight.bold),
+          titleLarge: TextStyle(fontSize: 36.0, fontStyle: FontStyle.italic),
+          bodyMedium: TextStyle(fontSize: 14.0, fontFamily: 'Hind'),
+        ),
+        
+        // Définir le thème des boutons
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            foregroundColor: Colors.white, backgroundColor: globals.mainColor, // Couleur du texte
+          ),
+        ),
+        
+        // Définir le thème des AppBar
+        appBarTheme: AppBarTheme(
+          color: globals.mainColor,  
+          titleTextStyle: TextStyle(fontSize: 20.0, color: Colors.white),
+          iconTheme: IconThemeData(
+            color: Colors.white,
+          )       
+        ),
+
+        floatingActionButtonTheme: FloatingActionButtonThemeData(
+            backgroundColor: globals.mainColor,
+            foregroundColor: Colors.white
+       
+        ),
+
+        // Définir le thème de la barre de navigation inférieure
+        bottomNavigationBarTheme: BottomNavigationBarThemeData(
+          backgroundColor: globals.mainColor,
+          selectedItemColor: Colors.white,
+          unselectedItemColor: Colors.grey[400],
+          selectedLabelStyle: TextStyle(fontWeight: FontWeight.bold),
+          unselectedLabelStyle: TextStyle(fontWeight: FontWeight.normal),
+        ),
+        
       ),
       home: const LogInScreen(),
     );
