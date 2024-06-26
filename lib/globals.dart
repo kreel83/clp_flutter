@@ -5,6 +5,9 @@ import 'package:flutter/src/widgets/text.dart';
 
 String user = "";
 String token = "";
+double espacement = 50;
+Color mainColor = const Color.fromARGB(255, 63, 83, 99);
+
 
 class Collecte {
   int status;

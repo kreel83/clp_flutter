@@ -210,6 +210,7 @@ class _MissionsState extends State<Missions> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          centerTitle: true,
           title: Text('Collecte n° : ${widget.collecte.numeroCollecte}'),
         ),
         endDrawer: Drawer(
@@ -217,7 +218,7 @@ class _MissionsState extends State<Missions> {
             children: [
               const DrawerHeader(
                 decoration: BoxDecoration(
-                  color: Colors.blue,
+                  color: Color.fromARGB(255, 63, 83, 99),
                 ),
                 child: Text(
                   'CLP',
@@ -256,10 +257,10 @@ class _MissionsState extends State<Missions> {
             : null,
         body: Column(
           children: [
-            Container(
-              padding: const EdgeInsets.all(20.0),
-              child: Text('Collecte n° : ${widget.collecte.numeroCollecte}'),
-            ),
+            // Container(
+            //   padding: const EdgeInsets.all(20.0),
+            //   child: Text('Collecte n° : ${widget.collecte.numeroCollecte}'),
+            // ),
             Container(
               child: widget.collecte.statut == 5
                   ? TextButton(
@@ -287,7 +288,8 @@ class _MissionsState extends State<Missions> {
                     )
                   : null,
             ),
-            Expanded(child: BuildListMissions(context))
+            Expanded(
+              child: BuildListMissions(context))
           ],
         ));
   }
@@ -324,7 +326,7 @@ class _MissionsState extends State<Missions> {
                 shrinkWrap: true,
                 itemBuilder: (BuildContext context, int index) {
                   return SizedBox(
-                    height: 30.0,
+                    height: globals.espacement,
                     child: CheckboxListTile(
                       title: Text(villesUniquesListe[index].nom!.substring(6)),
                       value: villesUniquesListe[index].coche!,
@@ -345,7 +347,7 @@ class _MissionsState extends State<Missions> {
     return Column(
       children: [
         SizedBox(
-          height: 30,
+          height: globals.espacement,
           child: CheckboxListTile(
             title: Text('Commune'),
             value: conditionType['mairie'],
@@ -357,7 +359,7 @@ class _MissionsState extends State<Missions> {
           ),
         ),
         SizedBox(
-          height: 30,
+          height: globals.espacement,
           child: CheckboxListTile(
             title: const Text('Terrain'),
             value: conditionType['terrain'],
@@ -376,7 +378,7 @@ class _MissionsState extends State<Missions> {
     return Column(
       children: [
         SizedBox(
-          height: 30,
+          height: globals.espacement,
           child: CheckboxListTile(
             title: Text('En cours'),
             value: conditionStatut['encours'],
@@ -388,7 +390,7 @@ class _MissionsState extends State<Missions> {
           ),
         ),
         SizedBox(
-          height: 30,
+          height: globals.espacement,
           child: CheckboxListTile(
             title: const Text('A valider'),
             value: conditionStatut['avalider'],
@@ -400,7 +402,7 @@ class _MissionsState extends State<Missions> {
           ),
         ),
         SizedBox(
-          height: 30,
+          height: globals.espacement,
           child: CheckboxListTile(
             title: Text('Annulée'),
             value: conditionStatut['annule'],
@@ -412,7 +414,7 @@ class _MissionsState extends State<Missions> {
           ),
         ),
         SizedBox(
-          height: 30,
+          height: globals.espacement,
           child: CheckboxListTile(
             title: Text('Refusée'),
             value: conditionStatut['refuse'],
@@ -424,7 +426,7 @@ class _MissionsState extends State<Missions> {
           ),
         ),
         SizedBox(
-          height: 30,
+          height: globals.espacement,
           child: CheckboxListTile(
             title: Text('Validée'),
             value: conditionStatut['valide'],
