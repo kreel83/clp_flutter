@@ -12,6 +12,7 @@ import '../../globals.dart' as globals;
 
 import '../../models/depot.dart';
 import '../../services/depots_service.dart';
+import '../mission/pickImage.dart';
 
 class DepotsView extends StatefulWidget {
   DepotsView({super.key, required this.mission, required this.collecte});
@@ -67,6 +68,7 @@ class _DepotsViewState extends State<DepotsView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+
       floatingActionButton: widget.mission.statut == "encours"
           ? FloatingActionButton(
               child: const Icon(Icons.add),
@@ -124,6 +126,7 @@ class _DepotsViewState extends State<DepotsView> {
                   });
             }
           }),
+
     );
   }
 }

@@ -1,3 +1,5 @@
+
+
 import 'package:clp_flutter/models/depot.dart';
 import 'package:clp_flutter/pages/mission/decisions_views.dart';
 import 'package:clp_flutter/pages/mission/depots_view.dart';
@@ -28,13 +30,34 @@ class _MissionPageState extends State<MissionPage> {
   late String pdf;
   var isLoaded = false;
   var isLoadedFiche = false;
-  final int _currentIndex = 0;
+  int _currentIndex = 0;
+  final String titleMisson = "Mission";
   final PageController _pageController = PageController(initialPage: 0);
   List<depots>? depotsListe;
+
+  final List<String> _titles = [
+    'Home',
+    'Depots',
+    'Discussions'
+  ];
+
+  final List<Widget> _pages = [
+    Center(child: Text('Home page')),
+    Center(child: Text('Dépots')),
+    Center(child: Text('Discussions')),
+  ];
+
+  void _onItemTapped(int index) {
+    setState(() {
+      print(index);
+      _currentIndex = index;
+    });
+  }
 
 
   @override
   void initState() {
+
     super.initState();
   }
 
@@ -42,13 +65,17 @@ class _MissionPageState extends State<MissionPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('La mission'),
+        title: Text(_titles[_currentIndex]),
       ),
            
       bottomNavigationBar: BottomNavigationBar(
           type: BottomNavigationBarType.fixed,
           currentIndex: _currentIndex,
-          onTap: (index) => _pageController.jumpToPage(index),
+          onTap: (index) => {
+            _pageController.jumpToPage(index),
+            _onItemTapped(index)
+
+          },
           items: [
             BottomNavigationBarItem(icon: Icon(Icons.home), label: 'home'),
             BottomNavigationBarItem(icon: Icon(Icons.list), label: 'depots'),

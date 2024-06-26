@@ -122,6 +122,7 @@ class _ImageUploadState extends State<ImageUpload> {
     return Scaffold(
         appBar: AppBar(
           title: const Text('Liste des documents'),
+
           actions: [
             IconButton(
                 onPressed: () {
@@ -148,6 +149,7 @@ class _ImageUploadState extends State<ImageUpload> {
             children: [
               Expanded(
                 child: Padding(
+
                     padding: const EdgeInsets.all(8.0),
                     child: imageFileList == null || imageFileList!.isEmpty
                         ? Center(
@@ -155,6 +157,7 @@ class _ImageUploadState extends State<ImageUpload> {
                               'Aucun document sélectionné\n cliquez sur + pour ajouter un document',
                               style: TextStyle(fontSize: 24),
                               textAlign: TextAlign.center,
+
                             ),
                           )
                         : GridView.builder(

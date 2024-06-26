@@ -36,9 +36,12 @@ class _DiscussionsViewState extends State<DiscussionsView> {
   @override
   void initState() {
     setState(() {
-      discussionsListe = getDisc(widget.mission);
+      discussionsListe = getDisc(widget.mission.id);
     });
     super.initState();
+    print('---------');
+    print(widget.mission.id);
+    print('----------');
   }
 
   Future<void> _sendDataToApi(int mission, String text) async {
@@ -69,6 +72,7 @@ class _DiscussionsViewState extends State<DiscussionsView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      
       body: Column(
         children: [
           Expanded(
@@ -93,10 +97,7 @@ class _DiscussionsViewState extends State<DiscussionsView> {
                         itemCount: discussions.length,
                         itemBuilder: (BuildContext context, int index) {
                           print(discussions[index].isSender);
-                          WidgetsBinding.instance!.addPostFrameCallback((_) {
-                            _scrollController.jumpTo(
-                                _scrollController.position.maxScrollExtent);
-                          });
+
                           return Align(
                             alignment: discussions[index].isSender
                                 ? Alignment.centerRight
