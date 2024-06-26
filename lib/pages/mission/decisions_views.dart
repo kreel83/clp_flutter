@@ -35,7 +35,6 @@ class _DecisionsViewState extends State<DecisionsView> {
 
   void _pickerImageFromGallery() async {
     final returnedImage =
-        
         await ImagePicker().pickImage(source: ImageSource.gallery);
     if (returnedImage != null) {
       final response = await http.post(
@@ -64,52 +63,56 @@ class _DecisionsViewState extends State<DecisionsView> {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.add),
-        
         onPressed: () {
           print('press');
           print(widget.mission);
           Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) =>
-                    ImageUpload(typeDepot: 'decisions', idMission: widget.mission))); 
+              context,
+              MaterialPageRoute(
+                  builder: (context) => ImageUpload(
+                      typeDepot: 'decisions', idMission: widget.mission)));
           // _pickerImageFromGallery();
         },
-      ) ,
-      body: Column(
-        children: [
-          FutureBuilder(
-              future: getDeps(widget.mission),
-              builder: (context, AsyncSnapshot snapshot) {
-                if (!snapshot.hasData) {
-                  return const Center(child: CircularProgressIndicator());
-                } else {
-                  final missions = snapshot.data;
-                  return ListView.builder(
-                      scrollDirection: Axis.vertical,
-                      shrinkWrap: true,
-                      padding: const EdgeInsets.all(8.0),
-                      itemCount: missions.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return Card(
-                          child: ListTile(
-                            onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          PhotoPage(collecte: widget.collecte, depot: missions[index]),
-                                  ),
-                              );
-                            },
-                            leading: const Icon(FontAwesomeIcons.envelope),
-                            title: Text(missions[index].documentName),
+      ),
+      body: FutureBuilder(
+        future: getDeps(widget.mission),
+        builder: (context, AsyncSnapshot snapshot) {
+          if (!snapshot.hasData) {
+            return const Center(child: CircularProgressIndicator());
+          } else {
+            final missions = snapshot.data;
+            if (snapshot.data!.isEmpty) {
+              return Center(
+                  child: Text(
+                'Aucun document déposé !',
+                style: TextStyle(fontSize: 20),
+              ));
+            }
+            return ListView.builder(
+                scrollDirection: Axis.vertical,
+                shrinkWrap: true,
+                padding: const EdgeInsets.all(8.0),
+                itemCount: missions.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return Card(
+                    child: ListTile(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => PhotoPage(
+                                collecte: widget.collecte,
+                                depot: missions[index]),
                           ),
                         );
-                      });
-                }
-              }),
-        ],
+                      },
+                      leading: const Icon(FontAwesomeIcons.envelope),
+                      title: Text(missions[index].documentName),
+                    ),
+                  );
+                });
+          }
+        },
       ),
     );
   }
