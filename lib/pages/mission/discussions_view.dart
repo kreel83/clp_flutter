@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:clp_flutter/models/collecte.dart';
 import 'package:clp_flutter/models/discussion.dart';
 import 'package:clp_flutter/services/mission_service.dart';
+import 'package:clp_flutter/utils/message.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
@@ -40,7 +41,7 @@ class _DiscussionsViewState extends State<DiscussionsView> {
     });
     super.initState();
     print('---------');
-    print(widget.mission.id);
+    print(discussionsListe.toString());
     print('----------');
   }
 
@@ -72,7 +73,6 @@ class _DiscussionsViewState extends State<DiscussionsView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      
       body: Column(
         children: [
           Expanded(
@@ -83,11 +83,8 @@ class _DiscussionsViewState extends State<DiscussionsView> {
                   return const Center(child: CircularProgressIndicator());
                 } else {
                   if (!snapshot.hasData) {
-                    return Center(
-                        child: Text(
-                      'Commencez votre discussion !',
-                      style: TextStyle(fontSize: 20),
-                    ));
+                    return CenterMessageWidget(
+                        texte: 'Commencez votre discussion !');
                   } else {
                     final discussions = snapshot.data;
                     print(discussions);

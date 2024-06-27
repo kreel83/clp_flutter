@@ -1,5 +1,3 @@
-
-
 import 'package:clp_flutter/models/depot.dart';
 import 'package:clp_flutter/pages/mission/decisions_views.dart';
 import 'package:clp_flutter/pages/mission/depots_view.dart';
@@ -35,13 +33,20 @@ class _MissionPageState extends State<MissionPage> {
   final PageController _pageController = PageController(initialPage: 0);
   List<depots>? depotsListe;
 
-  final List<String> _titles = [
-    'Home',
-    'Depots',
-    'Discussions'
+  final title4 = ['Home', 'Dépots', 'Décisions', 'Discussions'];
+  final title3 = ['Home', 'Dépots', 'Discussions'];
+
+  late final List<String> _titles;
+  late final List<Center> _pages;
+
+  final pages4 = [
+    Center(child: Text('Home page')),
+    Center(child: Text('Dépots')),
+    Center(child: Text('Décisions')),
+    Center(child: Text('Discussions')),
   ];
 
-  final List<Widget> _pages = [
+  final pages3 = [
     Center(child: Text('Home page')),
     Center(child: Text('Dépots')),
     Center(child: Text('Discussions')),
@@ -54,40 +59,49 @@ class _MissionPageState extends State<MissionPage> {
     });
   }
 
-
   @override
   void initState() {
-
     super.initState();
+    print(widget.mission.toString());
+    if (widget.mission.typeMission == "mairie") {
+      _titles = title4;
+      _pages = pages4;
+    } else {
+      _titles = title3;
+      _pages = pages4;
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(_titles[_currentIndex]),
+        title: Text('N° ' +
+            widget.mission.id.toString() +
+            ' à ' +
+            widget.mission.commune),
       ),
-           
       bottomNavigationBar: BottomNavigationBar(
           type: BottomNavigationBarType.fixed,
           currentIndex: _currentIndex,
-          onTap: (index) => {
-            _pageController.jumpToPage(index),
-            _onItemTapped(index)
-
-          },
+          onTap: (index) =>
+              {_pageController.jumpToPage(index), _onItemTapped(index)},
           items: [
             BottomNavigationBarItem(icon: Icon(Icons.home), label: 'home'),
             BottomNavigationBarItem(icon: Icon(Icons.list), label: 'depots'),
-            if (widget.mission.typeMission == "mairie") BottomNavigationBarItem(icon: Icon(Icons.list_alt), label: 'décisions'),
-            BottomNavigationBarItem(icon: Icon(Icons.comment_rounded), label: 'discussion'),
+            if (widget.mission.typeMission == "mairie")
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.list_alt), label: 'décisions'),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.comment_rounded), label: 'discussion'),
           ]),
       body: PageView(
         controller: _pageController,
         children: [
           MissionView(mission: widget.mission),
           DepotsView(collecte: widget.collecte, mission: widget.mission),
-          if (widget.mission.typeMission == "mairie") DecisionsView(collecte: widget.collecte, mission: widget.mission),
+          if (widget.mission.typeMission == "mairie")
+            DecisionsView(collecte: widget.collecte, mission: widget.mission),
           DiscussionsView(collecte: widget.collecte, mission: widget.mission)
         ],
       ),

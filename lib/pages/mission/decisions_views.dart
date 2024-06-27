@@ -2,7 +2,9 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:clp_flutter/pages/image_upload.dart';
+import 'package:clp_flutter/pages/mission/MessageWidget.dart';
 import 'package:clp_flutter/pages/photo_page.dart';
+import 'package:clp_flutter/utils/message.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/src/widgets/container.dart';
@@ -70,7 +72,10 @@ class _DecisionsViewState extends State<DecisionsView> {
               context,
               MaterialPageRoute(
                   builder: (context) => ImageUpload(
-                      typeDepot: 'decisions', idMission: widget.mission)));
+                        typeDepot: 'decisions',
+                        idMission: widget.mission,
+                        idCollecte: widget.collecte,
+                      )));
           // _pickerImageFromGallery();
         },
       ),
@@ -82,11 +87,7 @@ class _DecisionsViewState extends State<DecisionsView> {
           } else {
             final missions = snapshot.data;
             if (snapshot.data!.isEmpty) {
-              return Center(
-                  child: Text(
-                'Aucun document déposé !',
-                style: TextStyle(fontSize: 20),
-              ));
+              return const CenterMessageWidget(texte: 'Aucun document déposé');
             }
             return ListView.builder(
                 scrollDirection: Axis.vertical,
