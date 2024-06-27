@@ -1,8 +1,13 @@
+// ignore_for_file: prefer_typing_uninitialized_variables
+
 import 'package:clp_flutter/models/mission.dart';
 import 'package:clp_flutter/pages/createMission/departement.dart';
 import 'package:clp_flutter/pages/mapsDemo.dart';
+import 'package:clp_flutter/utils/message.dart';
 import './mission_page.dart';
 import 'package:clp_flutter/pages/view_pdf.dart';
+import 'package:clp_flutter/utils/message.dart';
+
 import 'package:clp_flutter/services/missions_service.dart';
 import 'package:flutter/material.dart';
 import '../models/collecte.dart';
@@ -94,6 +99,7 @@ class _MissionsState extends State<Missions> {
               statut[v.nom] = v.coche;
             }
 
+            // ignore: non_constant_identifier_names
             List<Mission> ListeDesMissionsAAfficher = [];
             for (var m in missions) {
               final test;
@@ -105,103 +111,107 @@ class _MissionsState extends State<Missions> {
               if (_checkdisplay(m) && test) ListeDesMissionsAAfficher.add(m);
             }
 
-            return ListView.builder(
-                padding: const EdgeInsets.all(8.0),
-                itemCount: ListeDesMissionsAAfficher.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return Card(
-                    child: Slidable(
-                      key: const ValueKey(0),
-                      startActionPane: ActionPane(
-                        motion: const ScrollMotion(),
-                        children: [
-                          SlidableAction(
-                            onPressed: (context) {
-                              _lancerGoogleMap(missions[index].map);
-                            },
-                            backgroundColor:
-                                const Color.fromARGB(255, 116, 60, 60),
-                            foregroundColor: Colors.white,
-                            icon: Icons.map,
-                            label: 'google map',
-                          ),
-                        ],
-                      ),
-                      endActionPane: ListeDesMissionsAAfficher[index]
-                                  .typeMission ==
-                              "terrain"
-                          ? ActionPane(
-                              motion: ScrollMotion(),
-                              children: [
-                                SlidableAction(
-                                  onPressed: (context) {
-                                    setState(() {
-                                      ListeDesMissionsAAfficher[index]
-                                              .moreInfo =
-                                          !ListeDesMissionsAAfficher[index]
-                                              .moreInfo;
-                                    });
-                                  },
-                                  backgroundColor:
-                                      const Color.fromARGB(255, 116, 60, 60),
-                                  foregroundColor: Colors.white,
-                                  icon: Icons.hdr_plus_sharp,
-                                  label: 'Titre',
-                                ),
-                              ],
-                            )
-                          : null,
-                      child: ListTile(
-                        isThreeLine: true,
-                        trailing: Icon(
-                          globals.getIconeMission(
-                              ListeDesMissionsAAfficher[index].statut),
-                          size: 20,
-                          color: Color(
-                            globals.getColorMission(
-                                ListeDesMissionsAAfficher[index].statut),
-                          ),
-                        ),
-                        leading: missions[index].typeMission == 'terrain'
-                            ? Icon(
-                                Icons.house_sharp,
-                                size: 40.0,
-                                color: Color(globals
-                                    .getMissionAttribute(
-                                        ListeDesMissionsAAfficher[index]
-                                            .typeMission)!
-                                    .color),
-                              )
-                            : Icon(Icons.location_city_sharp,
-                                size: 40.0,
-                                color: Color(globals
-                                    .getMissionAttribute(
-                                        ListeDesMissionsAAfficher[index]
-                                            .typeMission)!
-                                    .color)),
-                        title: Text(
-                          '${ListeDesMissionsAAfficher[index].typeMission} - ${ListeDesMissionsAAfficher[index].statut}',
-                          style: TextStyle(color: Colors.grey),
-                        ),
-                        subtitle: ListeDesMissionsAAfficher[index].moreInfo
-                            ? Text(ListeDesMissionsAAfficher[index].name!)
-                            : Text(
-                                '${ListeDesMissionsAAfficher[index].adresse}\n${ListeDesMissionsAAfficher[index].ville}',
-                                style: TextStyle(color: Colors.blueGrey),
+            return ListeDesMissionsAAfficher.isEmpty
+                ? const CenterMessageWidget(
+                    texte:
+                        "Aucune remontée d'information\n n'est affectée à cette collecte")
+                : ListView.builder(
+                    padding: const EdgeInsets.all(8.0),
+                    itemCount: ListeDesMissionsAAfficher.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return Card(
+                        child: Slidable(
+                          key: const ValueKey(0),
+                          startActionPane: ActionPane(
+                            motion: const ScrollMotion(),
+                            children: [
+                              SlidableAction(
+                                onPressed: (context) {
+                                  _lancerGoogleMap(missions[index].map);
+                                },
+                                backgroundColor:
+                                    const Color.fromARGB(255, 116, 60, 60),
+                                foregroundColor: Colors.white,
+                                icon: Icons.map,
+                                label: 'google map',
                               ),
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => MissionPage(
-                                      collecte: widget.collecte.id,
-                                      mission:
-                                          ListeDesMissionsAAfficher[index])));
-                        },
-                      ),
-                    ),
-                  );
-                });
+                            ],
+                          ),
+                          endActionPane: ListeDesMissionsAAfficher[index]
+                                      .typeMission ==
+                                  "terrain"
+                              ? ActionPane(
+                                  motion: ScrollMotion(),
+                                  children: [
+                                    SlidableAction(
+                                      onPressed: (context) {
+                                        setState(() {
+                                          ListeDesMissionsAAfficher[index]
+                                                  .moreInfo =
+                                              !ListeDesMissionsAAfficher[index]
+                                                  .moreInfo;
+                                        });
+                                      },
+                                      backgroundColor: const Color.fromARGB(
+                                          255, 116, 60, 60),
+                                      foregroundColor: Colors.white,
+                                      icon: Icons.hdr_plus_sharp,
+                                      label: 'Titre',
+                                    ),
+                                  ],
+                                )
+                              : null,
+                          child: ListTile(
+                            isThreeLine: true,
+                            trailing: Icon(
+                              globals.getIconeMission(
+                                  ListeDesMissionsAAfficher[index].statut),
+                              size: 20,
+                              color: Color(
+                                globals.getColorMission(
+                                    ListeDesMissionsAAfficher[index].statut),
+                              ),
+                            ),
+                            leading: missions[index].typeMission == 'terrain'
+                                ? Icon(
+                                    Icons.house_sharp,
+                                    size: 40.0,
+                                    color: Color(globals
+                                        .getMissionAttribute(
+                                            ListeDesMissionsAAfficher[index]
+                                                .typeMission)!
+                                        .color),
+                                  )
+                                : Icon(Icons.location_city_sharp,
+                                    size: 40.0,
+                                    color: Color(globals
+                                        .getMissionAttribute(
+                                            ListeDesMissionsAAfficher[index]
+                                                .typeMission)!
+                                        .color)),
+                            title: Text(
+                              '${ListeDesMissionsAAfficher[index].typeMission} - ${ListeDesMissionsAAfficher[index].statut}',
+                              style: TextStyle(color: Colors.grey),
+                            ),
+                            subtitle: ListeDesMissionsAAfficher[index].moreInfo
+                                ? Text(ListeDesMissionsAAfficher[index].name!)
+                                : Text(
+                                    '${ListeDesMissionsAAfficher[index].adresse}\n${ListeDesMissionsAAfficher[index].ville}',
+                                    style: TextStyle(color: Colors.blueGrey),
+                                  ),
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => MissionPage(
+                                          collecte: widget.collecte.id,
+                                          mission: ListeDesMissionsAAfficher[
+                                              index])));
+                            },
+                          ),
+                        ),
+                      );
+                    });
           }
         });
   }
@@ -288,8 +298,7 @@ class _MissionsState extends State<Missions> {
                     )
                   : null,
             ),
-            Expanded(
-              child: BuildListMissions(context))
+            Expanded(child: BuildListMissions(context))
           ],
         ));
   }

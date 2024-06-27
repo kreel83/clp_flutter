@@ -84,31 +84,28 @@ class _LogInScreen extends State<LogInScreen> {
       backgroundColor: const Color(0xff000725),
       body: ListView(
         children: [
-          Container(
-            width: double.infinity,
-            height: 180,
-            
-            decoration: const BoxDecoration(
-                color: Color.fromARGB(255, 29, 86, 166),
-                borderRadius:
-                    BorderRadius.only(bottomRight: Radius.circular(150))),
-                    child: Padding(
-              padding: EdgeInsets.fromLTRB(20, 70, 20, 50),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'C.L.P',
-                    style: const TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 25),
-                  ),
-                  const Text(
-                    'Connectez-vous',
-                    style: TextStyle(color: Colors.white),
-                  )
-                ],
+          Expanded(
+            child: Container(
+              width: double.infinity,
+              height: 180,
+              decoration: const BoxDecoration(
+                  color: Color.fromARGB(255, 87, 149, 234),
+                  borderRadius:
+                      BorderRadius.only(bottomRight: Radius.circular(150))),
+              child: Padding(
+                padding: EdgeInsets.fromLTRB(20, 70, 20, 50),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'C.L.P',
+                      style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 25),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
@@ -166,7 +163,7 @@ class _LogInScreen extends State<LogInScreen> {
                       borderRadius: BorderRadius.circular(15),
                       borderSide: const BorderSide(
                           color: Color.fromARGB(255, 29, 86, 166), width: 1)),
-                  focusedBorder:  OutlineInputBorder(
+                  focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(15),
                       borderSide: const BorderSide(
                           color: Color.fromARGB(255, 29, 86, 166), width: 1)),
@@ -183,11 +180,12 @@ class _LogInScreen extends State<LogInScreen> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 InkWell(
-                  onTap: () {                   
+                  onTap: () {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const ForgetPasswordScreen()));
+                            builder: (context) =>
+                                const ForgetPasswordScreen()));
                   },
                   child: const Text(
                     'Mot de passe oublié ?',
@@ -213,7 +211,11 @@ class _LogInScreen extends State<LogInScreen> {
                   decoration: BoxDecoration(
                       color: Color.fromARGB(255, 29, 86, 166),
                       borderRadius: BorderRadius.circular(16)),
-                  child: Center(child: Text('log in')),
+                  child: Center(
+                      child: Text(
+                    'Se connecter',
+                    style: TextStyle(color: Colors.white),
+                  )),
                 ),
               )),
           const SizedBox(
@@ -222,7 +224,6 @@ class _LogInScreen extends State<LogInScreen> {
           const SizedBox(
             height: 20,
           ),
-
         ],
       ),
     );

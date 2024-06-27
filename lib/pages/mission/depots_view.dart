@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:clp_flutter/pages/image_upload.dart';
 import 'package:clp_flutter/pages/photo_page.dart';
+import 'package:clp_flutter/utils/message.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/src/widgets/container.dart';
@@ -68,7 +69,6 @@ class _DepotsViewState extends State<DepotsView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
       floatingActionButton: widget.mission.statut == "encours"
           ? FloatingActionButton(
               child: const Icon(Icons.add),
@@ -79,7 +79,10 @@ class _DepotsViewState extends State<DepotsView> {
                     context,
                     MaterialPageRoute(
                         builder: (context) => ImageUpload(
-                            typeDepot: 'depots', idMission: widget.mission)));
+                              typeDepot: 'depots',
+                              idMission: widget.mission,
+                              idCollecte: widget.collecte,
+                            )));
                 // _pickerImageFromGallery();
               },
             )
@@ -92,11 +95,9 @@ class _DepotsViewState extends State<DepotsView> {
             } else {
               final missions = snapshot.data;
               if (snapshot.data!.isEmpty) {
-                return const Center(
-                    child: Text(
-                  'Aucun document déposé !',
-                  style: TextStyle(fontSize: 20),
-                ));
+                return const CenterMessageWidget(
+                    texte: 'Aucun document déposé');
+                ;
               }
               return ListView.builder(
                   scrollDirection: Axis.vertical,
@@ -126,7 +127,6 @@ class _DepotsViewState extends State<DepotsView> {
                   });
             }
           }),
-
     );
   }
 }

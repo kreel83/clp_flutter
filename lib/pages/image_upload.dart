@@ -1,5 +1,8 @@
 import 'dart:io';
 
+import 'package:clp_flutter/models/mission.dart';
+import 'package:clp_flutter/pages/mission_page.dart';
+import 'package:clp_flutter/utils/message.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:convert';
@@ -10,10 +13,14 @@ import 'package:fluttertoast/fluttertoast.dart';
 
 class ImageUpload extends StatefulWidget {
   const ImageUpload(
-      {super.key, required this.typeDepot, required this.idMission});
+      {super.key,
+      required this.typeDepot,
+      required this.idMission,
+      required this.idCollecte});
 
   final typeDepot;
   final idMission;
+  final idCollecte;
 
   @override
   // ignore: library_private_types_in_public_api
@@ -64,9 +71,9 @@ class _ImageUploadState extends State<ImageUpload> {
       request.fields['mission'] = mission.id.toString();
       var bytes = File(e.path).readAsBytesSync();
       request.fields['image'] = base64Encode(bytes);
-          setState(() {
-            afficheCircles[index] = true;
-          });
+      setState(() {
+        afficheCircles[index] = true;
+      });
       try {
         var response = await request.send();
         var r = await http.Response.fromStream(response);
@@ -102,7 +109,7 @@ class _ImageUploadState extends State<ImageUpload> {
     request.fields['image'] = base64Encode(bytes);
     try {
       var response = await request.send();
-      print('response : '+response.toString());
+      print('response : ' + response.toString());
       if (response.statusCode == 200) {
         setState(() {
           afficheCircles[index] = false;
@@ -126,7 +133,6 @@ class _ImageUploadState extends State<ImageUpload> {
     return Scaffold(
         appBar: AppBar(
           title: const Text('Liste des documents'),
-
           actions: [
             IconButton(
                 onPressed: () {
@@ -153,17 +159,11 @@ class _ImageUploadState extends State<ImageUpload> {
             children: [
               Expanded(
                 child: Padding(
-
                     padding: const EdgeInsets.all(8.0),
                     child: imageFileList == null || imageFileList!.isEmpty
-                        ? const Center(
-                            child: Text(
-                              'Aucun document sélectionné\n cliquez sur + pour ajouter un document',
-                              style: TextStyle(fontSize: 24),
-                              textAlign: TextAlign.center,
-
-                            ),
-                          )
+                        ? CenterMessageWidget(
+                            texte:
+                                'Aucun document sélectionné\n cliquez sur + pour ajouter un document')
                         : GridView.builder(
                             itemCount: imageFileList!.length,
                             gridDelegate:
@@ -191,8 +191,19 @@ class _ImageUploadState extends State<ImageUpload> {
                                                     widget.idMission,
                                                     index);
                                                 // Action pour partager
-                                                Navigator.pop(context);
-                                                Alert.showToast("Document téléchargé avec succès");
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          MissionPage(
+                                                            mission: widget
+                                                                .idMission,
+                                                            collecte: widget
+                                                                .idCollecte,
+                                                          )),
+                                                );
+                                                Alert.showToast(
+                                                    "Document téléchargé avec succès");
                                               },
                                             ),
                                             ListTile(
@@ -206,9 +217,9 @@ class _ImageUploadState extends State<ImageUpload> {
                                                       .removeAt(index);
                                                 });
                                                 // Action pour supprimer
-                                                Navigator.pop(context);
-                                                Alert.showToast("Image retirée avec succès");
-                                                
+                                                Navigator.pop(context, true);
+                                                Alert.showToast(
+                                                    "Image retirée avec succès");
                                               },
                                             ),
                                           ],
