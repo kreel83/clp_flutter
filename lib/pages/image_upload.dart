@@ -1,15 +1,15 @@
-import 'dart:io';
+// ignore_for_file: prefer_typing_uninitialized_variables
 
-import 'package:clp_flutter/models/mission.dart';
+import 'dart:io';
 import 'package:clp_flutter/pages/mission_page.dart';
 import 'package:clp_flutter/utils/message.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:convert';
 import '../../globals.dart' as globals;
 import '../utils/alert.dart';
 import 'package:http/http.dart' as http;
-import 'package:fluttertoast/fluttertoast.dart';
 
 class ImageUpload extends StatefulWidget {
   const ImageUpload(
@@ -25,6 +25,11 @@ class ImageUpload extends StatefulWidget {
   @override
   // ignore: library_private_types_in_public_api
   _ImageUploadState createState() => _ImageUploadState();
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty('typeDepot', typeDepot));
+  }
 }
 
 class _ImageUploadState extends State<ImageUpload> {
@@ -42,6 +47,7 @@ class _ImageUploadState extends State<ImageUpload> {
       imageFileList!.addAll(selectedImages);
     }
     setState(() {
+      // ignore: unused_local_variable
       for (XFile element in selectedImages) {
         afficheCircles.add(false);
       }
@@ -76,16 +82,16 @@ class _ImageUploadState extends State<ImageUpload> {
       });
       try {
         var response = await request.send();
-        var r = await http.Response.fromStream(response);
+        await http.Response.fromStream(response);
         if (response.statusCode == 200) {
           setState(() {
             afficheCircles[index] = false;
           });
         } else {
-          print('Failed to upload image. Status code: ${response.statusCode}');
+          //print('Failed to upload image. Status code: ${response.statusCode}');
         }
       } catch (e) {
-        print('Error uploading image: $e');
+        //print('Error uploading image: $e');
       }
       index++;
     }
@@ -97,7 +103,7 @@ class _ImageUploadState extends State<ImageUpload> {
 
     XFile e = imageFileList![index];
     var request = http.MultipartRequest('POST', uri);
-    print('index :' + index.toString());
+
     setState(() {
       afficheCircles[index] = true;
     });
@@ -109,16 +115,15 @@ class _ImageUploadState extends State<ImageUpload> {
     request.fields['image'] = base64Encode(bytes);
     try {
       var response = await request.send();
-      print('response : ' + response.toString());
       if (response.statusCode == 200) {
         setState(() {
           afficheCircles[index] = false;
         });
       } else {
-        print('Failed to upload image. Status code: ${response.statusCode}');
+        //print('Failed to upload image. Status code: ${response.statusCode}');
       }
     } catch (e) {
-      print('Error uploading image: $e');
+      //print('Error uploading image: $e');
     }
   }
 
@@ -142,14 +147,12 @@ class _ImageUploadState extends State<ImageUpload> {
                   sendImageToAPI(
                       imageFileList!, widget.typeDepot, widget.idMission);
                 },
-                icon: Icon(Icons.import_export))
+                icon: const Icon(Icons.import_export))
           ],
         ),
         floatingActionButton: FloatingActionButton(
           child: const Icon(Icons.add),
           onPressed: () {
-            print('press');
-
             _pickMultiImage();
             // _pickImage();
           },
@@ -161,7 +164,7 @@ class _ImageUploadState extends State<ImageUpload> {
                 child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: imageFileList == null || imageFileList!.isEmpty
-                        ? CenterMessageWidget(
+                        ? const CenterMessageWidget(
                             texte:
                                 'Aucun document sélectionné\n cliquez sur + pour ajouter un document')
                         : GridView.builder(
@@ -177,13 +180,13 @@ class _ImageUploadState extends State<ImageUpload> {
                                   showModalBottomSheet(
                                     context: context,
                                     builder: (BuildContext context) {
-                                      return Container(
+                                      return SizedBox(
                                         height: 200,
                                         child: Column(
                                           children: <Widget>[
                                             ListTile(
-                                              leading: Icon(Icons.share),
-                                              title: Text('Télécharger'),
+                                              leading: const Icon(Icons.share),
+                                              title: const Text('Télécharger'),
                                               onTap: () {
                                                 sendImageToAPISolo(
                                                     imageFileList!,
@@ -196,19 +199,23 @@ class _ImageUploadState extends State<ImageUpload> {
                                                   MaterialPageRoute(
                                                       builder: (context) =>
                                                           MissionPage(
-                                                            mission: widget
-                                                                .idMission,
-                                                            collecte: widget
-                                                                .idCollecte,
-                                                          )),
+                                                              mission: widget
+                                                                  .idMission,
+                                                              collecte: widget
+                                                                  .idCollecte,
+                                                              defaultIndex:
+                                                                  widget.typeDepot ==
+                                                                          'depots'
+                                                                      ? 1
+                                                                      : 2)),
                                                 );
                                                 Alert.showToast(
                                                     "Document téléchargé avec succès");
                                               },
                                             ),
                                             ListTile(
-                                              leading: Icon(Icons.delete),
-                                              title: Text('Supprimer'),
+                                              leading: const Icon(Icons.delete),
+                                              title: const Text('Supprimer'),
                                               onTap: () {
                                                 setState(() {
                                                   imageFileList!
@@ -217,7 +224,7 @@ class _ImageUploadState extends State<ImageUpload> {
                                                       .removeAt(index);
                                                 });
                                                 // Action pour supprimer
-                                                Navigator.pop(context, true);
+                                                Navigator.pop(context, 1);
                                                 Alert.showToast(
                                                     "Image retirée avec succès");
                                               },

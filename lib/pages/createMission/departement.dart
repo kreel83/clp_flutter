@@ -1,4 +1,5 @@
-import 'package:clp_flutter/models/collecte.dart';
+// ignore_for_file: prefer_typing_uninitialized_variables
+
 import 'package:clp_flutter/pages/createMission/ville.dart';
 import 'package:flutter/material.dart';
 
@@ -20,18 +21,18 @@ class _DepartementPageState extends State<DepartementPage> {
         title: const Text('Numéro de département'),
       ),
       body: Center(
-        child: Column(
-          children: [
-            SizedBox(
-              height: 130,
+        child: Column(children: [
+          const SizedBox(
+            height: 130,
+          ),
+          Container(
+            padding: const EdgeInsets.all(20.0),
+            child: Text(
+              'Collecte n° : ${widget.collecte.numeroCollecte}',
+              style: const TextStyle(fontSize: 30.0),
             ),
-            Container(
-                padding: EdgeInsets.all(20.0),
-                child: Text(
-                    'Collecte n° : ' + widget.collecte.numeroCollecte.toString(),
-                    style: TextStyle(fontSize: 30.0),),
-              ),
-            Column(
+          ),
+          Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SizedBox(
@@ -41,7 +42,7 @@ class _DepartementPageState extends State<DepartementPage> {
                     controller: departmentController,
                     maxLength: 2,
                     keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       border: OutlineInputBorder(),
                     ),
                   ),
@@ -52,8 +53,9 @@ class _DepartementPageState extends State<DepartementPage> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) =>
-                              VillePage(collecte: widget.collecte, dep: departmentController.text)));
+                          builder: (context) => VillePage(
+                              collecte: widget.collecte,
+                              dep: departmentController.text)));
                 },
                 child: const Text('Valider'),
               ),

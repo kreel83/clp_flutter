@@ -24,13 +24,13 @@ class Collecte {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['statut'] = this.statut;
-    data['status'] = this.status;
-    data['created_at'] = this.createdAt;
-    data['numero_collecte'] = this.numeroCollecte;
-    data['total'] = this.total;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['statut'] = statut;
+    data['status'] = status;
+    data['created_at'] = createdAt;
+    data['numero_collecte'] = numeroCollecte;
+    data['total'] = total;
     return data;
   }
 }

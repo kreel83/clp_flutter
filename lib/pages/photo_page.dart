@@ -1,26 +1,15 @@
-import 'dart:typed_data';
+// ignore_for_file: prefer_typing_uninitialized_variables, prefer_interpolation_to_compose_strings
 
-import 'package:clp_flutter/models/depot.dart';
-import 'package:clp_flutter/pages/mission/decisions_views.dart';
-import 'package:clp_flutter/pages/mission/depots_view.dart';
-import 'package:clp_flutter/pages/mission/discussions_view.dart';
-import 'package:clp_flutter/pages/mission/mission_view.dart';
-import 'package:clp_flutter/services/depots_service.dart';
+import 'dart:typed_data';
 import 'package:clp_flutter/utils/alert.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_pdfview/flutter_pdfview.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'dart:convert';
 import '../../globals.dart' as globals;
 import 'package:http/http.dart' as http;
 import 'package:photo_view/photo_view.dart';
-import 'package:dio/dio.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-
-// import '../../models/fiche.dart';
 
 class PhotoPage extends StatefulWidget {
-  PhotoPage({super.key, this.depot, required this.collecte});
+  const PhotoPage({super.key, this.depot, required this.collecte});
 
   final depot;
   final collecte;
@@ -50,8 +39,6 @@ class _PhotoPageState extends State<PhotoPage> {
         }));
 
     if (response.statusCode == 200) {
-      print(response.body);
-
       // ignore: use_build_context_synchronously
       Navigator.pop(context, true); // Ferme la boîte de dialogue
     } else {
@@ -61,7 +48,7 @@ class _PhotoPageState extends State<PhotoPage> {
 
   Future<Uint8List?> getPhoto(depot) async {
     var headers = {
-      'authorization': 'Bearer ' + globals.token,
+      'authorization': 'Bearer ${globals.token}',
       'Content-Type': 'application/json;charset=UTF-8',
       'Charset': 'utf-8'
     };
@@ -78,7 +65,6 @@ class _PhotoPageState extends State<PhotoPage> {
         }));
 
     if (response.statusCode == 200) {
-      print(response.body);
       var img = Uri.parse(response.body).data;
       Uint8List? myImage = img?.contentAsBytes();
 
@@ -100,24 +86,22 @@ class _PhotoPageState extends State<PhotoPage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Confirmation'),
-          content: Text('Voulez-vous supprimer cette photo ?'),
+          title: const Text('Confirmation'),
+          content: const Text('Voulez-vous supprimer cette photo ?'),
           actions: <Widget>[
             TextButton(
-              child: Text('Annuler'),
+              child: const Text('Annuler'),
               onPressed: () {
                 Navigator.of(context).pop(); // Ferme la boîte de dialogue
               },
             ),
             TextButton(
-              child: Text('Confirmer'),
+              child: const Text('Confirmer'),
               onPressed: () {
-                print('presssseeeddddd');
-
                 // Mettez ici votre logique pour ce qui doit se passer après la confirmation
                 deletePhoto(widget.depot);
-                  Navigator.pop(context, true);
-                  Alert.showToast('Document supprimé avec succés');
+                Navigator.pop(context, true);
+                Alert.showToast('Document supprimé avec succés');
               },
             ),
           ],
@@ -137,16 +121,14 @@ class _PhotoPageState extends State<PhotoPage> {
                   onPressed: () {
                     _showConfirmationDialog(context);
                   },
-                  icon: Icon(Icons.delete_outline))
+                  icon: const Icon(Icons.delete_outline))
           ],
         ),
         // ignore: unnecessary_null_comparison
-        body: Container(
-          child: PhotoView(
-            imageProvider: NetworkImage(
-              '${'http://surveilleco.vigilience.corp/collectes/' + widget.collecte.toString() + '/missions/' + widget.depot.missionId.toString() + '/' + widget.depot.type}s/' +
-                  widget.depot.documentName,
-            ),
+        body: PhotoView(
+          imageProvider: NetworkImage(
+            '${'http://surveilleco.vigilience.corp/collectes/' + widget.collecte.toString() + '/missions/' + widget.depot.missionId.toString() + '/' + widget.depot.type}s/' +
+                widget.depot.documentName,
           ),
         ));
   }

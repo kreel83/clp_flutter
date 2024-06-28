@@ -27,14 +27,11 @@ class MissionService {
         'http://mesprojets-laravel.mborgna.vigilience.corp/api/clp/mission');
     var response = await client.post(uri,
         headers: headers, body: jsonEncode({'mission': mission}));
-    
 
     if (response.statusCode == 200) {
       var json = response.body;
-      
+
       var ret = parseDiscussions(json);
-      print('retour');
-      
       return ret;
     } else {
       throw Exception('Failed to load items');
@@ -54,11 +51,10 @@ class MissionService {
     var response = await client.post(uri,
         headers: headers, body: jsonEncode({'dep': departement}));
 
-
     if (response.statusCode == 200) {
       var json = response.body;
       var ret = parseVilles(json);
-      
+
       return ret;
     } else {
       throw Exception('Failed to load items');

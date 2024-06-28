@@ -1,11 +1,10 @@
-import 'dart:convert';
+// ignore: file_names
+// ignore_for_file: use_build_context_synchronously
 
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import './collectes_liste.dart';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
-import '../globals.dart' as globals;
 
 class ForgetPasswordScreen extends StatefulWidget {
   const ForgetPasswordScreen({super.key});
@@ -21,7 +20,7 @@ class _ForgetPasswordScreen extends State<ForgetPasswordScreen> {
   void _sendMailForResetPassword(String email) async {
     if (email.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: Text("Veuillez entrer du texte avant de soumettre."),
           duration: Duration(seconds: 2),
         ),
@@ -51,14 +50,14 @@ class _ForgetPasswordScreen extends State<ForgetPasswordScreen> {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(message),
-              duration: Duration(seconds: 2),
+              duration: const Duration(seconds: 2),
             ),
           );
         } else {
-          print('NO NO NON ');
+          // print('NO NO NON ');
         }
       } catch (e) {
-        print(e.toString());
+        // print(e.toString());
       }
     }
   }
@@ -67,13 +66,17 @@ class _ForgetPasswordScreen extends State<ForgetPasswordScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      backgroundColor: Color(0xff000725),
+      backgroundColor: const Color(0xff000725),
       body: ListView(
         children: [
           Container(
             width: double.infinity,
             height: 180,
-            child: Padding(
+            decoration: const BoxDecoration(
+                color: Color.fromARGB(255, 29, 86, 166),
+                borderRadius:
+                    BorderRadius.only(bottomRight: Radius.circular(150))),
+            child: const Padding(
               padding: EdgeInsets.fromLTRB(20, 70, 20, 50),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -92,20 +95,16 @@ class _ForgetPasswordScreen extends State<ForgetPasswordScreen> {
                 ],
               ),
             ),
-            decoration: BoxDecoration(
-                color: Color.fromARGB(255, 29, 86, 166),
-                borderRadius:
-                    BorderRadius.only(bottomRight: Radius.circular(150))),
           ),
           Theme(
             data: ThemeData(
               hintColor: Colors.blue,
             ),
             child: Padding(
-              padding: EdgeInsets.only(top: 50, right: 20, left: 20),
+              padding: const EdgeInsets.only(top: 50, right: 20, left: 20),
               child: TextFormField(
                 controller: emailController,
-                style: TextStyle(color: Colors.white),
+                style: const TextStyle(color: Colors.white),
                 decoration: InputDecoration(
                   errorText: emailController.text.isEmpty
                       ? "Ce champ est obligatoire"
@@ -113,29 +112,29 @@ class _ForgetPasswordScreen extends State<ForgetPasswordScreen> {
                   labelText: "email",
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(15),
-                      borderSide: BorderSide(
+                      borderSide: const BorderSide(
                           color: Color.fromARGB(255, 29, 86, 166), width: 1)),
                   disabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(15),
-                      borderSide: BorderSide(
+                      borderSide: const BorderSide(
                           color: Color.fromARGB(255, 29, 86, 166), width: 1)),
                   enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(15),
-                      borderSide: BorderSide(
+                      borderSide: const BorderSide(
                           color: Color.fromARGB(255, 29, 86, 166), width: 1)),
                   focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(15),
-                      borderSide: BorderSide(
+                      borderSide: const BorderSide(
                           color: Color.fromARGB(255, 29, 86, 166), width: 1)),
                 ),
               ),
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 20,
           ),
           Padding(
-              padding: EdgeInsets.only(left: 20, right: 20),
+              padding: const EdgeInsets.only(left: 20, right: 20),
               child: GestureDetector(
                 onTap: () {
                   String name = emailController.text;
@@ -144,9 +143,9 @@ class _ForgetPasswordScreen extends State<ForgetPasswordScreen> {
                 child: Container(
                   height: 50,
                   decoration: BoxDecoration(
-                      color: Color.fromARGB(255, 29, 86, 166),
+                      color: const Color.fromARGB(255, 29, 86, 166),
                       borderRadius: BorderRadius.circular(16)),
-                  child: Center(
+                  child: const Center(
                       child: Text('Envoyer un  mail de réinitialization')),
                 ),
               )),

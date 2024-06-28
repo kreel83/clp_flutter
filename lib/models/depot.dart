@@ -1,3 +1,4 @@
+// ignore: camel_case_types
 class depots {
   String? documentName;
   String? date;
@@ -42,19 +43,19 @@ class depots {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['document_name'] = this.documentName;
-    data['date'] = this.date;
-    data['rep'] = this.rep;
-    data['w'] = this.w;
-    data['h'] = this.h;
-    data['url'] = this.url;
-    data['mainurl'] = this.mainurl;
-    data['folder'] = this.folder;
-    data['type'] = this.type;
-    data['deletable'] = this.deletable;
-    data['ext'] = this.ext;
-    data['mission_id'] = this.missionId;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['document_name'] = documentName;
+    data['date'] = date;
+    data['rep'] = rep;
+    data['w'] = w;
+    data['h'] = h;
+    data['url'] = url;
+    data['mainurl'] = mainurl;
+    data['folder'] = folder;
+    data['type'] = type;
+    data['deletable'] = deletable;
+    data['ext'] = ext;
+    data['mission_id'] = missionId;
     return data;
   }
 }

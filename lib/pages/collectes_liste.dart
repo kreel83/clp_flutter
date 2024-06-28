@@ -1,13 +1,9 @@
 import 'package:clp_flutter/pages/missions_liste.dart';
+import 'package:clp_flutter/pages/view_pdf.dart';
 import 'package:clp_flutter/services/collectes_service.dart';
+import 'package:clp_flutter/utils/alert.dart';
 import 'package:flutter/material.dart';
-import '../models/collecte.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-// import 'package:my_app/services/menu/menuCategorie_liste_service.dart';
-
 import 'package:flutter_slidable/flutter_slidable.dart';
-// import 'package:my_app/views/member/fiche.dart';
-import 'dart:convert';
 import '../../globals.dart' as globals;
 import 'package:http/http.dart' as http;
 
@@ -22,6 +18,7 @@ class Collectes extends StatefulWidget {
 
 class _CollectesState extends State<Collectes> {
   var isLoadedFiche = false;
+  late bool _isCollecteOpen = false;
   Future<dynamic>? collectesListe;
   int? total;
 
@@ -53,10 +50,24 @@ class _CollectesState extends State<Collectes> {
     return c;
   }
 
+  Future<bool> isCollecteEnCours(Future<dynamic>? futureCollectesListe) async {
+    return true;
+  }
+
   @override
   void initState() {
     collectesListe = getColls();
+    setState(() {
+      _isCollecteOpen = true;
+    });
     super.initState();
+  }
+
+  Future<void> _refresh() async {
+    collectesListe = getColls();
+    setState(() {
+      _isCollecteOpen = true;
+    });
   }
 
 // ignore: non_constant_identifier_names
@@ -73,9 +84,8 @@ class _CollectesState extends State<Collectes> {
                 SizedBox(
                   height: 70,
                   child: Center(
-                    child: Text('Rémunération depuis le début de l\'année  : ' +
-                        snapshot.data[1].toString() +
-                        ' €'),
+                    child: Text(
+                        'Rémunération depuis le début de l\'année  : ${snapshot.data[1]} €'),
                   ),
                 ),
                 Expanded(
@@ -86,23 +96,62 @@ class _CollectesState extends State<Collectes> {
                       itemCount: collectes.length,
                       itemBuilder: (BuildContext context, int index) {
                         return condition[collectes[index].statut.toString()]
-                            ? Card(
-                                child: ListTile(
-                                  tileColor: Color(globals.getColorCollecte(collectes[index].statut)),
-                                  isThreeLine: true,
-                                  leading: const FlutterLogo(size: 72.0),
-                                  title: Text(
+                            ? Slidable(
+                                key: const ValueKey(0),
+                                startActionPane: collectes[index].statut == 5
+                                    ? ActionPane(
+                                        motion: const ScrollMotion(),
+                                        children: [
+                                          SlidableAction(
+                                            onPressed: (context) {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      PDFViewer(
+                                                          collecte:
+                                                              collectes[index]
+                                                                  .id),
+                                                ),
+                                              );
+                                            },
+                                            backgroundColor:
+                                                const Color.fromARGB(
+                                                    255, 245, 72, 72),
+                                            foregroundColor: Colors.white,
+                                            icon: Icons.file_download,
+                                            label: 'Afficher la facture',
+                                          ),
+                                        ],
+                                      )
+                                    : null,
+                                child: Card(
+                                  child: ListTile(
+                                    tileColor: Color(globals.getColorCollecte(
+                                        collectes[index].statut)),
+                                    isThreeLine: true,
+                                    leading: const CircleAvatar(
+                                      backgroundColor: Colors.white,
+                                      backgroundImage: AssetImage(
+                                          'assets/images/veilleco.png'),
+                                    ),
+                                    title: Text(
                                       'Collecte N° ${collectes[index].numeroCollecte} - ${collectes[index].total.toString()}€',
-                                      style: TextStyle(color: Colors.white),),
-                                  subtitle: Text(
-                                      '${collectes[index].status}\ncréée le ${collectes[index].createdAt}', style: TextStyle(color: Colors.white)),
-                                  onTap: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => Missions(
-                                                collecte: collectes[index])));
-                                  },
+                                      style:
+                                          const TextStyle(color: Colors.white),
+                                    ),
+                                    subtitle: Text(
+                                        '${collectes[index].status}\ncréée le ${collectes[index].createdAt}',
+                                        style: const TextStyle(
+                                            color: Colors.white)),
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => Missions(
+                                                  collecte: collectes[index])));
+                                    },
+                                  ),
                                 ),
                               )
                             : null;
@@ -112,6 +161,48 @@ class _CollectesState extends State<Collectes> {
             );
           }
         });
+  }
+
+  void _confirmationNewCollecte(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text(
+            'Confirmation',
+            textAlign: TextAlign.center,
+            style: TextStyle(color: Colors.amber),
+          ),
+          content: const Text(
+            'Voulez-vous créer\n un nouvelle collecte ?',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 16.0,
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text(
+                'Non',
+                style: TextStyle(color: Colors.red),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop(); // Ferme la boîte de dialogue
+              },
+            ),
+            TextButton(
+              child: const Text('Oui'),
+              onPressed: () {
+                // Mettez ici votre logique pour ce qui doit se passer après la confirmation
+                _addCollecte();
+                Navigator.pop(context, true);
+                Alert.showToast('Nouvelle collecte créée');
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   Future<void> _addCollecte() async {
@@ -132,10 +223,10 @@ class _CollectesState extends State<Collectes> {
     );
 
     if (response.statusCode == 200) {
-          Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => const Collectes()));
+      Navigator.push(
+          // ignore: use_build_context_synchronously
+          context,
+          MaterialPageRoute(builder: (context) => const Collectes()));
     } else {
       throw Exception('Failed to load items');
     }
@@ -146,21 +237,20 @@ class _CollectesState extends State<Collectes> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: const Text('Liste des collections'),
+        title: const Text('Liste des collectes'),
       ),
-      body: BuildListCollecte(context),
-      floatingActionButton: FloatingActionButton(
-        // child: const Icon(Icons.add),
-        child: const Icon(Icons.add),
-        
-        
-        
-        onPressed: () {
+      body: RefreshIndicator(
+          onRefresh: _refresh, child: BuildListCollecte(context)),
+      floatingActionButton: _isCollecteOpen
+          ? FloatingActionButton(
+              // child: const Icon(Icons.add),
+              child: const Icon(Icons.add),
 
-          _addCollecte();
-          // _pickImage();
-        },
-      ),
+              onPressed: () {
+                _confirmationNewCollecte(context);
+              },
+            )
+          : null,
       endDrawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
@@ -169,7 +259,7 @@ class _CollectesState extends State<Collectes> {
               decoration: BoxDecoration(
                 color: globals.mainColor,
               ),
-              child: Text(
+              child: const Text(
                 'CLP',
                 style: TextStyle(
                   color: Colors.white,
@@ -182,7 +272,7 @@ class _CollectesState extends State<Collectes> {
                 SizedBox(
                   height: globals.espacement,
                   child: CheckboxListTile(
-                    title: Text('En cours'),
+                    title: const Text('En cours'),
                     value: condition['1'],
                     onChanged: (value) {
                       setState(() {
@@ -194,7 +284,7 @@ class _CollectesState extends State<Collectes> {
                 SizedBox(
                   height: globals.espacement,
                   child: CheckboxListTile(
-                    title: Text('Annulée'),
+                    title: const Text('Annulée'),
                     value: condition['2'],
                     onChanged: (value) {
                       setState(() {
@@ -206,7 +296,7 @@ class _CollectesState extends State<Collectes> {
                 SizedBox(
                   height: globals.espacement,
                   child: CheckboxListTile(
-                    title: Text('Refusée'),
+                    title: const Text('Refusée'),
                     value: condition['3'],
                     onChanged: (value) {
                       setState(() {
@@ -218,7 +308,7 @@ class _CollectesState extends State<Collectes> {
                 SizedBox(
                   height: globals.espacement,
                   child: CheckboxListTile(
-                    title: Text('Validée'),
+                    title: const Text('Validée'),
                     value: condition['4'],
                     onChanged: (value) {
                       setState(() {
@@ -230,7 +320,7 @@ class _CollectesState extends State<Collectes> {
                 SizedBox(
                   height: globals.espacement,
                   child: CheckboxListTile(
-                    title: Text('Payée'),
+                    title: const Text('Payée'),
                     value: condition['5'],
                     onChanged: (value) {
                       setState(() {

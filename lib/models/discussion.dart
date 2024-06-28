@@ -16,10 +16,10 @@ class Discussion {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['texte'] = this.texte;
-    data['isSender'] = this.isSender;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['texte'] = texte;
+    data['isSender'] = isSender;
 
     return data;
   }

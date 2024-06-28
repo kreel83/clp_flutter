@@ -1,9 +1,6 @@
 import 'dart:convert';
-
-import 'package:clp_flutter/pages/forgetPassword.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:clp_flutter/pages/forget_password.dart';
 import './collectes_liste.dart';
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import '../globals.dart' as globals;
@@ -28,8 +25,8 @@ class _LogInScreen extends State<LogInScreen> {
       'Charset': 'utf-8'
     };
 
-    final body = {'email': 'marc.borgna@gmail.com', 'password': '1801'};
-    // final body = {'email': 'melodidit@gmail.com', 'password': 'Colibri09'};
+    // final body = {'email': 'marc.borgna@gmail.com', 'password': '1801'};
+    final body = {'email': 'melodidit@gmail.com', 'password': 'Colibri09'};
 
     try {
       Response response = await post(
@@ -42,41 +39,38 @@ class _LogInScreen extends State<LogInScreen> {
         var json = await jsonDecode(response.body);
         globals.user = json['nom'] + ' ' + json['prenom'];
         globals.token = json['token'];
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => Collectes()));
+        Navigator.pushReplacement(
+            // ignore: use_build_context_synchronously
+            context,
+            MaterialPageRoute(builder: (context) => const Collectes()));
       } else {
-        print('NO NO NON ');
+        // print('NO NO NON ');
       }
     } catch (e) {
-      print(e.toString());
+      // print(e.toString());
     }
   }
 
-  void _sendMailForResetPassword(String email) async {
-    var headers = {
-      'authorization': 'Basic c3R1ZHlkb3RlOnN0dWR5ZG90ZTEyMw==',
-      'Content-Type': 'application/json;charset=UTF-8',
-      'Charset': 'utf-8'
-    };
+  // void _sendMailForResetPassword(String email) async {
+  //   var headers = {
+  //     'authorization': 'Basic c3R1ZHlkb3RlOnN0dWR5ZG90ZTEyMw==',
+  //     'Content-Type': 'application/json;charset=UTF-8',
+  //     'Charset': 'utf-8'
+  //   };
 
-    final body = {'email': 'marc.borgna@gmail.com'};
-    // final body = {'email': 'melodidit@gmail.com', 'password': 'Colibri09'};
+  //   final body = {'email': 'marc.borgna@gmail.com'};
+  //   final body = {'email': 'melodidit@gmail.com', 'password': 'Colibri09'};
 
-    try {
-      Response response = await post(
-          headers: headers,
-          Uri.parse(
-              'http://mesprojets-laravel.mborgna.vigilience.corp/api/clp/forgetPassword'),
-          body: jsonEncode(body));
-      if (response.statusCode == 200) {
-        var json = await jsonDecode(response.body);
-      } else {
-        print('NO NO NON ');
-      }
-    } catch (e) {
-      print(e.toString());
-    }
-  }
+  //   try {
+  //     await post(
+  //         headers: headers,
+  //         Uri.parse(
+  //             'http://mesprojets-laravel.mborgna.vigilience.corp/api/clp/forgetPassword'),
+  //         body: jsonEncode(body));
+  //   } catch (e) {
+  //     print(e.toString());
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -92,14 +86,14 @@ class _LogInScreen extends State<LogInScreen> {
                   color: Color.fromARGB(255, 87, 149, 234),
                   borderRadius:
                       BorderRadius.only(bottomRight: Radius.circular(150))),
-              child: Padding(
+              child: const Padding(
                 padding: EdgeInsets.fromLTRB(20, 70, 20, 50),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
+                    Text(
                       'C.L.P',
-                      style: const TextStyle(
+                      style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
                           fontSize: 25),
@@ -175,7 +169,7 @@ class _LogInScreen extends State<LogInScreen> {
             height: 10,
           ),
           Padding(
-            padding: EdgeInsets.only(right: 20),
+            padding: const EdgeInsets.only(right: 20),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
@@ -200,7 +194,7 @@ class _LogInScreen extends State<LogInScreen> {
             height: 20,
           ),
           Padding(
-              padding: EdgeInsets.only(left: 20, right: 20),
+              padding: const EdgeInsets.only(left: 20, right: 20),
               child: GestureDetector(
                 onTap: () {
                   login(emailController.text.toString(),
@@ -209,9 +203,9 @@ class _LogInScreen extends State<LogInScreen> {
                 child: Container(
                   height: 50,
                   decoration: BoxDecoration(
-                      color: Color.fromARGB(255, 29, 86, 166),
+                      color: const Color.fromARGB(255, 29, 86, 166),
                       borderRadius: BorderRadius.circular(16)),
-                  child: Center(
+                  child: const Center(
                       child: Text(
                     'Se connecter',
                     style: TextStyle(color: Colors.white),
