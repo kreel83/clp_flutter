@@ -1,13 +1,11 @@
 library lge.globals;
 
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/text.dart';
 
 String user = "";
 String token = "";
 double espacement = 50;
 Color mainColor = const Color.fromARGB(255, 63, 83, 99);
-
 
 class Collecte {
   int status;
@@ -78,6 +76,7 @@ Mission? getMissionAttribute(String? status) {
   for (var col in missions) {
     if (col.status == status) return col;
   }
+  return null;
 }
 
 int getColorMission(String? status) {

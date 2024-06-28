@@ -1,4 +1,3 @@
-// ignore: file_names
 import 'package:clp_flutter/models/discussion.dart';
 import 'package:flutter/material.dart';
 

@@ -2,26 +2,14 @@
 
 import 'package:clp_flutter/models/mission.dart';
 import 'package:clp_flutter/pages/createMission/departement.dart';
-import 'package:clp_flutter/pages/mapsDemo.dart';
 import 'package:clp_flutter/utils/message.dart';
 import './mission_page.dart';
 import 'package:clp_flutter/pages/view_pdf.dart';
-import 'package:clp_flutter/utils/message.dart';
-
 import 'package:clp_flutter/services/missions_service.dart';
 import 'package:flutter/material.dart';
-import '../models/collecte.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-// import 'package:my_app/services/menu/menuCategorie_liste_service.dart';
-
 import 'package:flutter_slidable/flutter_slidable.dart';
-// import 'package:my_app/views/member/fiche.dart';
-import 'dart:convert';
 import '../../globals.dart' as globals;
-import 'package:http/http.dart' as http;
-
-// import '../../models/fiche.dart';
 
 class VilleUnique {
   String? nom;
@@ -141,7 +129,7 @@ class _MissionsState extends State<Missions> {
                                       .typeMission ==
                                   "terrain"
                               ? ActionPane(
-                                  motion: ScrollMotion(),
+                                  motion: const ScrollMotion(),
                                   children: [
                                     SlidableAction(
                                       onPressed: (context) {
@@ -191,13 +179,14 @@ class _MissionsState extends State<Missions> {
                                         .color)),
                             title: Text(
                               '${ListeDesMissionsAAfficher[index].typeMission} - ${ListeDesMissionsAAfficher[index].statut}',
-                              style: TextStyle(color: Colors.grey),
+                              style: const TextStyle(color: Colors.grey),
                             ),
                             subtitle: ListeDesMissionsAAfficher[index].moreInfo
                                 ? Text(ListeDesMissionsAAfficher[index].name!)
                                 : Text(
                                     '${ListeDesMissionsAAfficher[index].adresse}\n${ListeDesMissionsAAfficher[index].ville}',
-                                    style: TextStyle(color: Colors.blueGrey),
+                                    style:
+                                        const TextStyle(color: Colors.blueGrey),
                                   ),
                             onTap: () {
                               Navigator.push(
@@ -205,8 +194,9 @@ class _MissionsState extends State<Missions> {
                                   MaterialPageRoute(
                                       builder: (context) => MissionPage(
                                           collecte: widget.collecte.id,
-                                          mission: ListeDesMissionsAAfficher[
-                                              index])));
+                                          mission:
+                                              ListeDesMissionsAAfficher[index],
+                                          defaultIndex: 0)));
                             },
                           ),
                         ),
@@ -272,31 +262,15 @@ class _MissionsState extends State<Missions> {
             //   child: Text('Collecte n° : ${widget.collecte.numeroCollecte}'),
             // ),
             Container(
-              child: widget.collecte.statut == 5
-                  ? TextButton(
-                      style: TextButton.styleFrom(
-                        backgroundColor: const Color(0xffF18265),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                      ),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                PDFViewer(collecte: widget.collecte.id),
-                          ),
-                        );
-                      },
-                      child: const Text(
-                        "Facture",
-                        style: TextStyle(
-                          color: Color(0xffffffff),
-                        ),
-                      ),
-                    )
-                  : null,
+              child: const Padding(
+                padding: EdgeInsets.all(16.0),
+                child: Center(
+                  child: Text(
+                    'Liste des missions',
+                    style: TextStyle(fontSize: 20.0),
+                  ),
+                ),
+              ),
             ),
             Expanded(child: BuildListMissions(context))
           ],
@@ -358,7 +332,7 @@ class _MissionsState extends State<Missions> {
         SizedBox(
           height: globals.espacement,
           child: CheckboxListTile(
-            title: Text('Commune'),
+            title: const Text('Commune'),
             value: conditionType['mairie'],
             onChanged: (value) {
               setState(() {
@@ -389,7 +363,7 @@ class _MissionsState extends State<Missions> {
         SizedBox(
           height: globals.espacement,
           child: CheckboxListTile(
-            title: Text('En cours'),
+            title: const Text('En cours'),
             value: conditionStatut['encours'],
             onChanged: (value) {
               setState(() {
@@ -413,7 +387,7 @@ class _MissionsState extends State<Missions> {
         SizedBox(
           height: globals.espacement,
           child: CheckboxListTile(
-            title: Text('Annulée'),
+            title: const Text('Annulée'),
             value: conditionStatut['annule'],
             onChanged: (value) {
               setState(() {
@@ -425,7 +399,7 @@ class _MissionsState extends State<Missions> {
         SizedBox(
           height: globals.espacement,
           child: CheckboxListTile(
-            title: Text('Refusée'),
+            title: const Text('Refusée'),
             value: conditionStatut['refuse'],
             onChanged: (value) {
               setState(() {
@@ -437,7 +411,7 @@ class _MissionsState extends State<Missions> {
         SizedBox(
           height: globals.espacement,
           child: CheckboxListTile(
-            title: Text('Validée'),
+            title: const Text('Validée'),
             value: conditionStatut['valide'],
             onChanged: (value) {
               setState(() {

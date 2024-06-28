@@ -1,7 +1,4 @@
 import 'package:clp_flutter/models/mission.dart';
-
-import '../models/collecte.dart';
-
 import 'dart:convert';
 import '../../globals.dart' as globals;
 import 'package:http/http.dart' as http;
@@ -17,13 +14,14 @@ class MissionsService {
 
   Future<List<Mission>> getCollectes(collecte) async {
     var headers = {
-      'authorization': 'Bearer ' + globals.token,
+      'authorization': 'Bearer ${globals.token}',
       'Content-Type': 'application/json;charset=UTF-8',
       'Charset': 'utf-8'
     };
 
     var client = http.Client();
-    var uri = Uri.parse('http://mesprojets-laravel.mborgna.vigilience.corp/api/clp/missions');
+    var uri = Uri.parse(
+        'http://mesprojets-laravel.mborgna.vigilience.corp/api/clp/missions');
     var response = await client.post(uri,
         headers: headers, body: jsonEncode({'collecte': collecte}));
 

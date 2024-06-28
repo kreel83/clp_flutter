@@ -1,22 +1,15 @@
-import 'dart:convert';
+// ignore_for_file: prefer_typing_uninitialized_variables
 
-import 'package:clp_flutter/models/collecte.dart';
-import 'package:clp_flutter/models/discussion.dart';
+import 'dart:convert';
 import 'package:clp_flutter/services/mission_service.dart';
 import 'package:clp_flutter/utils/message.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../globals.dart' as globals;
 import 'package:http/http.dart' as http;
 
-import '../../models/depot.dart';
-import '../../services/depots_service.dart';
-
 class DiscussionsView extends StatefulWidget {
-  DiscussionsView({super.key, required this.mission, required this.collecte});
+  const DiscussionsView(
+      {super.key, required this.mission, required this.collecte});
 
   final mission;
   final collecte;
@@ -40,14 +33,11 @@ class _DiscussionsViewState extends State<DiscussionsView> {
       discussionsListe = getDisc(widget.mission.id);
     });
     super.initState();
-    print('---------');
-    print(discussionsListe.toString());
-    print('----------');
   }
 
   Future<void> _sendDataToApi(int mission, String text) async {
     var headers = {
-      'authorization': 'Bearer ' + globals.token,
+      'authorization': 'Bearer ${globals.token}',
       'Content-Type': 'application/json;charset=UTF-8',
       'Charset': 'utf-8'
     };
@@ -58,7 +48,6 @@ class _DiscussionsViewState extends State<DiscussionsView> {
     var response = await client.post(uri,
         headers: headers,
         body: jsonEncode({'mission': mission, 'message': text}));
-    print(response.statusCode);
 
     if (response.statusCode == 200) {
       _textFieldController.clear();
@@ -66,7 +55,7 @@ class _DiscussionsViewState extends State<DiscussionsView> {
         discussionsListe = getDisc(mission);
       });
     } else {
-      print('Échec de l\'envoi des données. Statut : ${response.statusCode}');
+      //print('Échec de l\'envoi des données. Statut : ${response.statusCode}');
     }
   }
 
@@ -83,25 +72,22 @@ class _DiscussionsViewState extends State<DiscussionsView> {
                   return const Center(child: CircularProgressIndicator());
                 } else {
                   if (!snapshot.hasData) {
-                    return CenterMessageWidget(
+                    return const CenterMessageWidget(
                         texte: 'Commencez votre discussion !');
                   } else {
                     final discussions = snapshot.data;
-                    print(discussions);
                     return ListView.builder(
                         controller: _scrollController,
                         padding: const EdgeInsets.all(8.0),
                         itemCount: discussions.length,
                         itemBuilder: (BuildContext context, int index) {
-                          print(discussions[index].isSender);
-
                           return Align(
                             alignment: discussions[index].isSender
                                 ? Alignment.centerRight
                                 : Alignment.centerLeft,
                             child: Container(
-                              margin: EdgeInsets.all(8.0),
-                              padding: EdgeInsets.all(12.0),
+                              margin: const EdgeInsets.all(8.0),
+                              padding: const EdgeInsets.all(12.0),
                               decoration: BoxDecoration(
                                 color: discussions[index].isSender
                                     ? Colors.blue
@@ -110,7 +96,7 @@ class _DiscussionsViewState extends State<DiscussionsView> {
                               ),
                               child: Text(
                                 discussions[index].texte,
-                                style: TextStyle(color: Colors.white),
+                                style: const TextStyle(color: Colors.white),
                               ),
                             ),
                           );
@@ -121,13 +107,13 @@ class _DiscussionsViewState extends State<DiscussionsView> {
             ),
           ),
           Container(
-            padding: EdgeInsets.all(10.0),
+            padding: const EdgeInsets.all(10.0),
             child: TextField(
               controller: _textFieldController,
               decoration: InputDecoration(
                 hintText: 'Entrez votre message',
                 suffixIcon: IconButton(
-                  icon: Icon(Icons.send),
+                  icon: const Icon(Icons.send),
                   onPressed: () {
                     String text = _textFieldController.text;
                     _sendDataToApi(widget.mission.id, text);

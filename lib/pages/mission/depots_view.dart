@@ -1,22 +1,15 @@
-import 'dart:convert';
-import 'dart:io';
+// ignore_for_file: prefer_typing_uninitialized_variables
 
 import 'package:clp_flutter/pages/image_upload.dart';
 import 'package:clp_flutter/pages/photo_page.dart';
 import 'package:clp_flutter/utils/message.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:flutter/src/widgets/container.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:image_picker/image_picker.dart';
-import '../../globals.dart' as globals;
-
 import '../../models/depot.dart';
 import '../../services/depots_service.dart';
-import '../mission/pickImage.dart';
 
 class DepotsView extends StatefulWidget {
-  DepotsView({super.key, required this.mission, required this.collecte});
+  const DepotsView({super.key, required this.mission, required this.collecte});
 
   final mission;
   final collecte;
@@ -26,44 +19,11 @@ class DepotsView extends StatefulWidget {
 }
 
 class _DepotsViewState extends State<DepotsView> {
-  File? _selectedImage;
-
   String base64Image = "";
 
   Future<List<depots>> getDeps(mission) async {
     var missions = await DepotsService().getDepots(mission);
-    print('test');
-    print(missions);
     return missions;
-  }
-
-  void _pickerImageFromGallery() async {
-    final returnedImage =
-        await ImagePicker().pickImage(source: ImageSource.gallery);
-    if (returnedImage != null) {
-      print(returnedImage!.path);
-      print(widget.mission);
-
-      final response = await http.post(
-        Uri.parse('https://la-gazette-eco.fr/api/clp/mission/setPicture'),
-        headers: <String, String>{
-          'authorization': 'Bearer ' + globals.token,
-          'Content-Type': 'image/jpg;charset=UTF-8',
-          'Charset': 'utf-8'
-        },
-        body: jsonEncode(
-            {'image': returnedImage!.path, 'mission': widget.mission}),
-      );
-
-      print(response.statusCode);
-      if (response.statusCode == 200) {
-        print('Image successfully uploaded');
-      } else {
-        print('Handle the error');
-      }
-    }
-
-    return null;
   }
 
   @override
@@ -73,8 +33,6 @@ class _DepotsViewState extends State<DepotsView> {
           ? FloatingActionButton(
               child: const Icon(Icons.add),
               onPressed: () {
-                print('press');
-                print(widget.mission);
                 Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -97,7 +55,6 @@ class _DepotsViewState extends State<DepotsView> {
               if (snapshot.data!.isEmpty) {
                 return const CenterMessageWidget(
                     texte: 'Aucun document déposé');
-                ;
               }
               return ListView.builder(
                   scrollDirection: Axis.vertical,
@@ -117,7 +74,7 @@ class _DepotsViewState extends State<DepotsView> {
                             ),
                           );
                           setState(() {
-                            print('deleted file');
+                            // print('deleted file');
                           });
                         },
                         leading: const Icon(FontAwesomeIcons.envelope),

@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names
+
 class Ville {
   String? CodeCom;
   String? Vconame;
@@ -13,9 +15,9 @@ class Ville {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['CODE_COM'] = this.CodeCom;
-    data['VCO_NAME'] = this.Vconame;
-    data['Code_postal'] = this.CodePostal;
+    data['CODE_COM'] = CodeCom;
+    data['VCO_NAME'] = Vconame;
+    data['Code_postal'] = CodePostal;
     return data;
   }
 }

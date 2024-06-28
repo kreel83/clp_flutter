@@ -42,19 +42,19 @@ class Mission {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['statut'] = this.statut;
-    data['created_at'] = this.createdAt;
-    data['type_mission'] = this.typeMission;
-    data['map'] = this.map;
-    data['adresse'] = this.adresse;
-    data['name'] = this.name;
-    data['ville'] = this.ville;
-    data['tarif'] = this.tarif;
-    data['phase'] = this.phase;
-    data['moreInfo'] = this.moreInfo;
-    data['commune'] = this.commune;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['statut'] = statut;
+    data['created_at'] = createdAt;
+    data['type_mission'] = typeMission;
+    data['map'] = map;
+    data['adresse'] = adresse;
+    data['name'] = name;
+    data['ville'] = ville;
+    data['tarif'] = tarif;
+    data['phase'] = phase;
+    data['moreInfo'] = moreInfo;
+    data['commune'] = commune;
     return data;
   }
 }

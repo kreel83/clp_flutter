@@ -9,7 +9,7 @@ void main() {
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]).then((_) {
-    runApp(MyApp());
+    runApp(const MyApp());
   });
 }
 
@@ -32,38 +32,35 @@ class MyApp extends StatelessWidget {
           titleLarge: TextStyle(fontSize: 36.0, fontStyle: FontStyle.italic),
           bodyMedium: TextStyle(fontSize: 14.0, fontFamily: 'Hind'),
         ),
-        
+
         // Définir le thème des boutons
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
-            foregroundColor: Colors.white, backgroundColor: globals.mainColor, // Couleur du texte
+            foregroundColor: Colors.white,
+            backgroundColor: globals.mainColor, // Couleur du texte
           ),
         ),
-        
+
         // Définir le thème des AppBar
         appBarTheme: AppBarTheme(
-          color: globals.mainColor,  
-          titleTextStyle: TextStyle(fontSize: 20.0, color: Colors.white),
-          iconTheme: IconThemeData(
-            color: Colors.white,
-          )       
-        ),
+            color: globals.mainColor,
+            titleTextStyle:
+                const TextStyle(fontSize: 20.0, color: Colors.white),
+            iconTheme: const IconThemeData(
+              color: Colors.white,
+            )),
 
         floatingActionButtonTheme: FloatingActionButtonThemeData(
-            backgroundColor: globals.mainColor,
-            foregroundColor: Colors.white
-       
-        ),
+            backgroundColor: globals.mainColor, foregroundColor: Colors.white),
 
         // Définir le thème de la barre de navigation inférieure
         bottomNavigationBarTheme: BottomNavigationBarThemeData(
           backgroundColor: globals.mainColor,
           selectedItemColor: Colors.white,
           unselectedItemColor: Colors.grey[400],
-          selectedLabelStyle: TextStyle(fontWeight: FontWeight.bold),
-          unselectedLabelStyle: TextStyle(fontWeight: FontWeight.normal),
+          selectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold),
+          unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.normal),
         ),
-        
       ),
       home: const LogInScreen(),
     );
