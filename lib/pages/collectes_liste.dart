@@ -1,3 +1,4 @@
+import 'package:clp_flutter/models/collecte.dart';
 import 'package:clp_flutter/pages/missions_liste.dart';
 import 'package:clp_flutter/pages/view_pdf.dart';
 import 'package:clp_flutter/services/collectes_service.dart';
@@ -18,7 +19,6 @@ class Collectes extends StatefulWidget {
 
 class _CollectesState extends State<Collectes> {
   var isLoadedFiche = false;
-  late bool _isCollecteOpen = false;
   Future<dynamic>? collectesListe;
   int? total;
 
@@ -32,6 +32,13 @@ class _CollectesState extends State<Collectes> {
 
   bool isMenuOpen = false;
   bool isLoadedCollectes = false;
+
+  bool hasNonOneStatus(List<Collecte> collectionFuture) {
+    // Wait for the future containing the collection to complete
+    // final collection = await collectionFuture;
+    // print(collection);
+    return collectionFuture.any((collecte) => collecte.statut == 1);
+  }
 
   void openMenu() {
     setState(() {
@@ -50,24 +57,15 @@ class _CollectesState extends State<Collectes> {
     return c;
   }
 
-  Future<bool> isCollecteEnCours(Future<dynamic>? futureCollectesListe) async {
-    return true;
-  }
-
   @override
   void initState() {
     collectesListe = getColls();
-    setState(() {
-      _isCollecteOpen = true;
-    });
+
     super.initState();
   }
 
   Future<void> _refresh() async {
     collectesListe = getColls();
-    setState(() {
-      _isCollecteOpen = true;
-    });
   }
 
 // ignore: non_constant_identifier_names
@@ -130,10 +128,28 @@ class _CollectesState extends State<Collectes> {
                                     tileColor: Color(globals.getColorCollecte(
                                         collectes[index].statut)),
                                     isThreeLine: true,
-                                    leading: const CircleAvatar(
-                                      backgroundColor: Colors.white,
-                                      backgroundImage: AssetImage(
-                                          'assets/images/veilleco.png'),
+                                    leading: Column(
+                                      children: [
+                                        const Padding(
+                                            padding: EdgeInsets.all(6)),
+                                        CircleAvatar(
+                                          backgroundColor: Colors.white,
+                                          child: Center(
+                                            child: Text(
+                                              collectes[index]
+                                                  .missions
+                                                  .toString(),
+                                              style: TextStyle(
+                                                  fontSize: 20,
+                                                  color: Color(
+                                                      globals.getColorCollecte(
+                                                          collectes[index]
+                                                              .statut)),
+                                                  fontWeight: FontWeight.w900),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                     title: Text(
                                       'Collecte N° ${collectes[index].numeroCollecte} - ${collectes[index].total.toString()}€',
@@ -207,7 +223,7 @@ class _CollectesState extends State<Collectes> {
 
   Future<void> _addCollecte() async {
     var uri = Uri.parse(
-        'http://mesprojets-laravel.mborgna.vigilience.corp/api/clp/addCollecte'); // Replace with your API endpoint
+        'https://www.la-gazette-eco.fr/api/clp/addCollecte'); // Replace with your API endpoint
 
     var headers = {
       'authorization': 'Bearer ${globals.token}',
@@ -241,16 +257,41 @@ class _CollectesState extends State<Collectes> {
       ),
       body: RefreshIndicator(
           onRefresh: _refresh, child: BuildListCollecte(context)),
-      floatingActionButton: _isCollecteOpen
-          ? FloatingActionButton(
-              // child: const Icon(Icons.add),
-              child: const Icon(Icons.add),
+      floatingActionButton: FutureBuilder<dynamic>(
+        future: collectesListe,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            final showFloatingActionButton = hasNonOneStatus(snapshot.data[0]);
+            if (!showFloatingActionButton) {
+              return FloatingActionButton(
+                onPressed: () {
+                  _confirmationNewCollecte(context);
+                },
+                child: const Icon(Icons.add),
+              );
+            } else {
+              return const SizedBox
+                  .shrink(); // Hide the button if there's an element with status 1
+            }
+          } else if (snapshot.hasError) {
+            // print('Error: ${snapshot.error}');
+            return const SizedBox.shrink(); // Or you can show an error widget
+          }
 
-              onPressed: () {
-                _confirmationNewCollecte(context);
-              },
-            )
-          : null,
+          // Show a progress indicator while waiting for the future
+          return const SizedBox.shrink();
+        },
+      ),
+      // floatingActionButton: _isCollecteOpen
+      //     ? FloatingActionButton(
+      //         // child: const Icon(Icons.add),
+      //         child: const Icon(Icons.add),
+
+      //         onPressed: () {
+      //           _confirmationNewCollecte(context);
+      //         },
+      //       )
+      //     : null,
       endDrawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,

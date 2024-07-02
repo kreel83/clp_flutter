@@ -6,6 +6,52 @@ import 'package:http/http.dart';
 import 'package:intl/intl.dart';
 import '../../globals.dart' as globals;
 
+class StatutImage extends StatelessWidget {
+  final String statut;
+
+  const StatutImage({super.key, required this.statut});
+
+  @override
+  Widget build(BuildContext context) {
+    Icon imagePath;
+
+    switch (statut) {
+      case 'encours':
+        imagePath = const Icon(
+          Icons.directions_walk,
+          size: 60,
+          color: Colors.blue,
+        );
+        break;
+      case 'avalider':
+        imagePath = const Icon(
+          Icons.schedule,
+          size: 60,
+          color: Colors.amber,
+        );
+        break;
+      case 'valide':
+        imagePath = const Icon(
+          Icons.check,
+          color: Colors.green,
+          size: 60,
+        );
+        break;
+
+      default:
+        //annulé
+        imagePath = const Icon(
+          Icons.close,
+          color: Colors.red,
+          size: 60,
+        );
+        break;
+    }
+
+    return imagePath;
+  }
+}
+
 class MissionView extends StatefulWidget {
   const MissionView({super.key, this.mission});
 
@@ -22,7 +68,7 @@ class _MissionViewState extends State<MissionView> {
     DateTime? picked = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
-      firstDate: DateTime(2000),
+      firstDate: DateTime(2020),
       lastDate: DateTime(2025),
     );
     if (picked != null && picked != DateTime.now()) {
@@ -46,7 +92,7 @@ class _MissionViewState extends State<MissionView> {
       Response response = await post(
           headers: headers,
           Uri.parse(
-              'http://mesprojets-laravel.mborgna.vigilience.corp/api/clp/mission/changeStatutMission'),
+              'https://www.la-gazette-eco.fr/api/clp/mission/changeStatutMission'),
           body: jsonEncode(body));
       if (response.statusCode == 200) {
         var json = response.body;
@@ -77,6 +123,7 @@ class _MissionViewState extends State<MissionView> {
             ),
           ),
         ),
+        StatutImage(statut: widget.mission.statut),
         SizedBox(
           height: 120.0,
           child: Center(
@@ -89,99 +136,135 @@ class _MissionViewState extends State<MissionView> {
         ),
         Column(
           children: [
-            widget.mission.statut == 'avalider'
-                ? Column(
+            const Text('Adresse'),
+            Center(
+              child: Text(
+                widget.mission.adresse,
+                style: const TextStyle(fontSize: 15.0),
+              ),
+            )
+          ],
+        ),
+        const SizedBox(
+          height: 40,
+        ),
+        widget.mission.passage != null
+            ? Column(
+                children: [
+                  Column(
                     children: [
-                      const Center(
-                        child: Text(
-                          'En attente de validation',
-                          style: TextStyle(
-                              backgroundColor: Colors.blueAccent,
-                              color: Colors.white,
-                              fontWeight: FontWeight.w800,
-                              fontSize: 25.0),
-                        ),
-                      ),
-                      Container(
-                        height: 120,
-                        alignment: Alignment.center,
-                        child: ElevatedButton(
-                          style: const ButtonStyle(
-                            backgroundColor:
-                                WidgetStatePropertyAll(Colors.blueGrey),
-                          ),
-                          child: const Text(
-                              'Repasser le relevé d\'information \nen statut "en cours"',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(color: Colors.white)),
-                          onPressed: () {
-                            _clotureMission(widget.mission, null);
-                          },
-                        ),
-                      )
+                      const Text('Date de passage :'),
+                      Center(
+                          child: Text(
+                        widget.mission.passage.toString(),
+                        style: const TextStyle(fontSize: 30.0),
+                      )),
                     ],
-                  )
-                : Column(
-                    children: [
-                      SizedBox(
-                          height: 80.0,
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Center(
-                              child: TextField(
-                                controller: _dateController,
-                                decoration: const InputDecoration(
-                                  hintText:
-                                      'Entrez la date de passage (obligatoire)',
+                  ),
+                  const SizedBox(
+                    height: 40,
+                  ),
+                ],
+              )
+            : Column(
+                children: [
+                  widget.mission.statut == 'avalider'
+                      ? Column(
+                          children: [
+                            const Center(
+                              child: Text(
+                                'En attente de validation',
+                                style: TextStyle(
+                                    backgroundColor: Colors.amber,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w800,
+                                    fontSize: 25.0),
+                              ),
+                            ),
+                            Container(
+                              height: 120,
+                              alignment: Alignment.center,
+                              child: ElevatedButton(
+                                style: const ButtonStyle(
+                                  backgroundColor:
+                                      WidgetStatePropertyAll(Colors.blueGrey),
                                 ),
-                                onTap: () {
-                                  FocusScope.of(context).requestFocus(
-                                      FocusNode()); // Pour empêcher l'ouverture du clavier
-                                  _selectDate(context);
+                                child: const Text(
+                                    'Repasser le relevé d\'information \nen statut "en cours"',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(color: Colors.white)),
+                                onPressed: () {
+                                  _clotureMission(widget.mission, null);
+                                },
+                              ),
+                            )
+                          ],
+                        )
+                      : Column(
+                          children: [
+                            const Text(
+                                'Entrez la date de passage (obligatoire)'),
+                            SizedBox(
+                                height: 80.0,
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 60),
+                                  child: Center(
+                                    child: SizedBox(
+                                      width: 100,
+                                      child: TextField(
+                                        controller: _dateController,
+                                        onTap: () {
+                                          FocusScope.of(context).requestFocus(
+                                              FocusNode()); // Pour empêcher l'ouverture du clavier
+                                          _selectDate(context);
+                                        },
+                                      ),
+                                    ),
+                                  ),
+                                )),
+                            const SizedBox(
+                              height: 80.0,
+                            ),
+                            SizedBox(
+                              height: 80.0,
+                              child: ElevatedButton(
+                                style: const ButtonStyle(
+                                  backgroundColor:
+                                      WidgetStatePropertyAll(Colors.blueGrey),
+                                ),
+                                child: const Text(
+                                    "Cloturer le relevé d'information ",
+                                    style: TextStyle(color: Colors.white)),
+                                onPressed: () {
+                                  if (_dateController.text.isEmpty) {
+                                    showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return AlertDialog(
+                                            title: const Text(
+                                                'La date de passage est obligatoire'),
+                                            actions: [
+                                              TextButton(
+                                                  onPressed: () {
+                                                    Navigator.of(context).pop();
+                                                  },
+                                                  child: const Text(
+                                                      "j'ai compris"))
+                                            ],
+                                          );
+                                        });
+                                  } else {
+                                    _clotureMission(
+                                        widget.mission, _dateController.text);
+                                  }
                                 },
                               ),
                             ),
-                          )),
-                      const SizedBox(
-                        height: 80.0,
-                      ),
-                      SizedBox(
-                        height: 80.0,
-                        child: ElevatedButton(
-                          style: const ButtonStyle(
-                            backgroundColor:
-                                WidgetStatePropertyAll(Colors.blueGrey),
-                          ),
-                          child: const Text("Cloturer le relevé d'information ",
-                              style: TextStyle(color: Colors.white)),
-                          onPressed: () {
-                            if (_dateController.text.isEmpty) {
-                              showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return AlertDialog(
-                                      title: const Text(
-                                          'La date de passage est obligatoire'),
-                                      actions: [
-                                        TextButton(
-                                            onPressed: () {
-                                              Navigator.of(context).pop();
-                                            },
-                                            child: const Text("j'ai compris"))
-                                      ],
-                                    );
-                                  });
-                            } else {
-                              _clotureMission(
-                                  widget.mission, _dateController.text);
-                            }
-                          },
+                          ],
                         ),
-                      ),
-                    ],
-                  ),
-          ],
-        ),
+                ],
+              ),
       ],
     );
   }

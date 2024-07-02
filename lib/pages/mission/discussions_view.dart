@@ -43,8 +43,8 @@ class _DiscussionsViewState extends State<DiscussionsView> {
     };
 
     var client = http.Client();
-    var uri = Uri.parse(
-        'http://mesprojets-laravel.mborgna.vigilience.corp/api/clp/mission/newMessage');
+    var uri =
+        Uri.parse('https://www.la-gazette-eco.fr/api/clp/mission/newMessage');
     var response = await client.post(uri,
         headers: headers,
         body: jsonEncode({'mission': mission, 'message': text}));

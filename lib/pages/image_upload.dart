@@ -66,7 +66,7 @@ class _ImageUploadState extends State<ImageUpload> {
 
   sendImageToAPI(List<XFile> imageFile, typeDepot, mission) async {
     var uri = Uri.parse(
-        'http://mesprojets-laravel.mborgna.vigilience.corp/api/clp/mission/setPicture'); // Replace with your API endpoint
+        'https://www.la-gazette-eco.fr/api/clp/mission/setPicture'); // Replace with your API endpoint
     var index = 0;
     for (XFile e in imageFileList!) {
       var request = http.MultipartRequest('POST', uri);
@@ -99,7 +99,7 @@ class _ImageUploadState extends State<ImageUpload> {
 
   sendImageToAPISolo(List<XFile> imageFile, typeDepot, mission, index) async {
     var uri = Uri.parse(
-        'http://mesprojets-laravel.mborgna.vigilience.corp/api/clp/mission/setPicture'); // Replace with your API endpoint
+        'https://www.la-gazette-eco.fr/api/clp/mission/setPicture'); // Replace with your API endpoint
 
     XFile e = imageFileList![index];
     var request = http.MultipartRequest('POST', uri);
@@ -116,6 +116,8 @@ class _ImageUploadState extends State<ImageUpload> {
     try {
       var response = await request.send();
       if (response.statusCode == 200) {
+        print(response.statusCode);
+        print(request.fields['image']);
         setState(() {
           afficheCircles[index] = false;
         });

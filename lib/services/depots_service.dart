@@ -20,8 +20,7 @@ class DepotsService {
     };
 
     var client = http.Client();
-    var uri = Uri.parse(
-        'http://mesprojets-laravel.mborgna.vigilience.corp/api/clp/mission');
+    var uri = Uri.parse('https://www.la-gazette-eco.fr/api/clp/mission');
     var response = await client.post(uri,
         headers: headers, body: jsonEncode({'mission': mission.id}));
 
@@ -49,8 +48,7 @@ class DepotsService {
     };
 
     var client = http.Client();
-    var uri = Uri.parse(
-        'http://mesprojets-laravel.mborgna.vigilience.corp/api/clp/mission');
+    var uri = Uri.parse('https://www.la-gazette-eco.fr/api/clp/mission');
     var response = await client.post(uri,
         headers: headers, body: jsonEncode({'mission': mission.id}));
 

@@ -27,8 +27,8 @@ class _PhotoPageState extends State<PhotoPage> {
     };
 
     var client = http.Client();
-    var uri = Uri.parse(
-        'http://mesprojets-laravel.mborgna.vigilience.corp/api/clp/mission/deletePhoto');
+    var uri =
+        Uri.parse('https://www.la-gazette-eco.fr/api/clp/mission/deletePhoto');
     var response = await client.post(uri,
         headers: headers,
         body: jsonEncode({

@@ -38,8 +38,7 @@ class _ForgetPasswordScreen extends State<ForgetPasswordScreen> {
       try {
         Response response = await post(
             headers: headers,
-            Uri.parse(
-                'http://mesprojets-laravel.mborgna.vigilience.corp/api/clp/forgetPassword'),
+            Uri.parse('https://www.la-gazette-eco.fr/api/clp/forgetPassword'),
             body: jsonEncode(body));
         String message = "Le mail n'est pas reconnu";
         if (response.statusCode == 200) {
