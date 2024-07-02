@@ -33,13 +33,13 @@ class Mission {
 List<Mission> missions = [
   Mission(
       status: "mairie",
-      name: "Constat d'affichage mairie",
+      name: "Constat d'affichage\n mairie",
       color: 0xFFEF3535,
       tarif: 45,
       affichage: 'Mairie'),
   Mission(
       status: "terrain",
-      name: "Constat d'affichage terrain",
+      name: "Constat d'affichage\n terrain",
       color: 0xFFFFA500,
       tarif: 25,
       affichage: 'Terrain'),

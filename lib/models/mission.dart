@@ -9,8 +9,10 @@ class Mission {
   String? typeMission;
   String? tarif;
   int? phase;
+  late bool clp;
   late bool moreInfo;
   String? commune;
+  String? passage;
 
   Mission(
       {this.id,
@@ -23,8 +25,10 @@ class Mission {
       this.ville,
       this.tarif,
       this.phase,
+      required this.clp,
       required this.moreInfo,
-      this.commune});
+      this.commune,
+      this.passage});
 
   Mission.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -37,8 +41,10 @@ class Mission {
     ville = json['ville'];
     tarif = json['tarif'];
     phase = json['phase'];
+    clp = json['clp'];
     moreInfo = false;
     commune = json['commune'];
+    passage = json['passage'];
   }
 
   Map<String, dynamic> toJson() {
@@ -55,6 +61,8 @@ class Mission {
     data['phase'] = phase;
     data['moreInfo'] = moreInfo;
     data['commune'] = commune;
+    data['clp'] = clp;
+    data['passage'] = passage;
     return data;
   }
 }

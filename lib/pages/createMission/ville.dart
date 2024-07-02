@@ -51,8 +51,7 @@ class _VillePageState extends State<VillePage> {
     };
 
     var client = http.Client();
-    var uri = Uri.parse(
-        'http://mesprojets-laravel.mborgna.vigilience.corp/api/clp/getAllCommunes');
+    var uri = Uri.parse('https://www.la-gazette-eco.fr/api/clp/getAllCommunes');
     var response = await client.post(uri,
         headers: headers, body: jsonEncode({'dep': dep}));
 
@@ -149,8 +148,8 @@ class _VillePageState extends State<VillePage> {
     };
 
     var client = http.Client();
-    var uri = Uri.parse(
-        'http://mesprojets-laravel.mborgna.vigilience.corp/api/clp/mission/setMission');
+    var uri =
+        Uri.parse('https://www.la-gazette-eco.fr/api/clp/mission/setMission');
     var response = await client.post(uri,
         headers: headers,
         body: jsonEncode(

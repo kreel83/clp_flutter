@@ -20,8 +20,7 @@ class MissionsService {
     };
 
     var client = http.Client();
-    var uri = Uri.parse(
-        'http://mesprojets-laravel.mborgna.vigilience.corp/api/clp/missions');
+    var uri = Uri.parse('https://www.la-gazette-eco.fr/api/clp/missions');
     var response = await client.post(uri,
         headers: headers, body: jsonEncode({'collecte': collecte}));
 

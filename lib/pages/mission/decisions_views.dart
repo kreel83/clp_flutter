@@ -30,20 +30,22 @@ class _DecisionsViewState extends State<DecisionsView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        child: const Icon(Icons.add),
-        onPressed: () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => ImageUpload(
-                        typeDepot: 'decisions',
-                        idMission: widget.mission,
-                        idCollecte: widget.collecte,
-                      )));
-          // _pickerImageFromGallery();
-        },
-      ),
+      floatingActionButton: widget.mission.statut == "encours"
+          ? FloatingActionButton(
+              child: const Icon(Icons.add),
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => ImageUpload(
+                              typeDepot: 'decisions',
+                              idMission: widget.mission,
+                              idCollecte: widget.collecte,
+                            )));
+                // _pickerImageFromGallery();
+              },
+            )
+          : null,
       body: FutureBuilder(
         future: getDeps(widget.mission),
         builder: (context, AsyncSnapshot snapshot) {

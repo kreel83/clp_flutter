@@ -2,7 +2,7 @@
     package="com.example.clp_flutter">
     <uses-permission android:name="android.permission.INTERNET" />
    <application
-        android:label="clp_flutter"
+        android:label="CLP"
         android:name="${applicationName}" 
         android:usesCleartextTraffic="true"
         android:icon="@mipmap/ic_launcher">

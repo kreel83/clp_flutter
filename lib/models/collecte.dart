@@ -5,6 +5,7 @@ class Collecte {
   String? createdAt;
   int? numeroCollecte;
   String? total;
+  int? missions;
 
   Collecte(
       {this.id,
@@ -12,7 +13,8 @@ class Collecte {
       this.status,
       this.createdAt,
       this.numeroCollecte,
-      this.total});
+      this.total,
+      this.missions});
 
   Collecte.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -21,6 +23,7 @@ class Collecte {
     createdAt = json['created_at'];
     numeroCollecte = json['numero_collecte'];
     total = json['total'];
+    missions = json['missions'];
   }
 
   Map<String, dynamic> toJson() {
@@ -31,6 +34,7 @@ class Collecte {
     data['created_at'] = createdAt;
     data['numero_collecte'] = numeroCollecte;
     data['total'] = total;
+    data['missions'] = missions;
     return data;
   }
 }

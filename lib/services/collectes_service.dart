@@ -16,6 +16,7 @@ class CollectesService {
       col.createdAt = json['created_at'];
       col.numeroCollecte = json['numero_collecte'];
       col.total = json['total'].toString();
+      col.missions = json['missions'];
       collectes.add(col);
     }
     return collectes;

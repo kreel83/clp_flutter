@@ -23,8 +23,7 @@ class MissionService {
     };
 
     var client = http.Client();
-    var uri = Uri.parse(
-        'http://mesprojets-laravel.mborgna.vigilience.corp/api/clp/mission');
+    var uri = Uri.parse('https://www.la-gazette-eco.fr/api/clp/mission');
     var response = await client.post(uri,
         headers: headers, body: jsonEncode({'mission': mission}));
 
@@ -46,8 +45,7 @@ class MissionService {
     };
 
     var client = http.Client();
-    var uri = Uri.parse(
-        'http://mesprojets-laravel.mborgna.vigilience.corp/api/clp/getAllCommunes');
+    var uri = Uri.parse('https://www.la-gazette-eco.fr/api/clp/getAllCommunes');
     var response = await client.post(uri,
         headers: headers, body: jsonEncode({'dep': departement}));
 
