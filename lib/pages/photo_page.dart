@@ -1,6 +1,7 @@
-// ignore_for_file: prefer_typing_uninitialized_variables, prefer_interpolation_to_compose_strings
+// ignore_for_file: prefer_typing_uninitialized_variables, prefer_interpolation_to_compose_strings, use_build_context_synchronously
 
 import 'dart:typed_data';
+import 'package:clp_flutter/pages/mission_page.dart';
 import 'package:clp_flutter/utils/alert.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
@@ -9,10 +10,17 @@ import 'package:http/http.dart' as http;
 import 'package:photo_view/photo_view.dart';
 
 class PhotoPage extends StatefulWidget {
-  const PhotoPage({super.key, this.depot, required this.collecte});
+  const PhotoPage(
+      {super.key,
+      this.depot,
+      required this.collecte,
+      required this.mission,
+      required this.indexTab});
 
   final depot;
   final collecte;
+  final mission;
+  final indexTab;
 
   @override
   State<PhotoPage> createState() => _PhotoPageState();
@@ -39,7 +47,6 @@ class _PhotoPageState extends State<PhotoPage> {
         }));
 
     if (response.statusCode == 200) {
-      // ignore: use_build_context_synchronously
       Navigator.pop(context, true); // Ferme la boîte de dialogue
     } else {
       throw Exception('Failed to load items');
@@ -55,6 +62,7 @@ class _PhotoPageState extends State<PhotoPage> {
 
     var client = http.Client();
     var uri =
+        // 'http://mesprojets-laravel.mborgna.vigilience.corp/api/clp/mission/getPhoto');
         Uri.parse('https://www.la-gazette-eco.fr/api/clp/mission/getPhoto');
     var response = await client.post(uri,
         headers: headers,
@@ -97,10 +105,18 @@ class _PhotoPageState extends State<PhotoPage> {
             ),
             TextButton(
               child: const Text('Confirmer'),
-              onPressed: () {
+              onPressed: () async {
                 // Mettez ici votre logique pour ce qui doit se passer après la confirmation
-                deletePhoto(widget.depot);
-                Navigator.pop(context, true);
+                await deletePhoto(widget.depot);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => MissionPage(
+                          mission: widget.mission,
+                          collecte: widget.collecte,
+                          defaultIndex: widget.indexTab)),
+                );
+
                 Alert.showToast('Document supprimé avec succés');
               },
             ),

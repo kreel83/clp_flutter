@@ -4,15 +4,15 @@ import '../../globals.dart' as globals;
 import 'package:http/http.dart' as http;
 
 class DepotsService {
-  List<depots> parseDecisions(String responseBody) {
+  List<Depot> parseDecisions(String responseBody) {
     final p = jsonDecode(responseBody)['decisions'];
     final parsed = p.cast<Map<String, dynamic>>();
 
     //print(parsed.toString());
-    return parsed.map<depots>((json) => depots.fromJson(json)).toList();
+    return parsed.map<Depot>((json) => Depot.fromJson(json)).toList();
   }
 
-  Future<List<depots>> getDecisions(mission) async {
+  Future<List<Depot>> getDecisions(mission) async {
     var headers = {
       'authorization': 'Bearer ${globals.token}',
       'Content-Type': 'application/json;charset=UTF-8',
@@ -32,15 +32,15 @@ class DepotsService {
     }
   }
 
-  List<depots> parseDepots(String responseBody) {
+  List<Depot> parseDepots(String responseBody) {
     final p = jsonDecode(responseBody)['depots'];
     final parsed = p.cast<Map<String, dynamic>>();
 
     //print(parsed.toString());
-    return parsed.map<depots>((json) => depots.fromJson(json)).toList();
+    return parsed.map<Depot>((json) => Depot.fromJson(json)).toList();
   }
 
-  Future<List<depots>> getDepots(mission) async {
+  Future<List<Depot>> getDepots(mission) async {
     var headers = {
       'authorization': 'Bearer ${globals.token}',
       'Content-Type': 'application/json;charset=UTF-8',
