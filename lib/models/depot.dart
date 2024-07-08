@@ -1,5 +1,5 @@
 // ignore: camel_case_types
-class depots {
+class Depot {
   String? documentName;
   String? date;
   String? rep;
@@ -13,7 +13,7 @@ class depots {
   String? ext;
   int? missionId;
 
-  depots(
+  Depot(
       {this.documentName,
       this.date,
       this.rep,
@@ -27,7 +27,7 @@ class depots {
       this.ext,
       this.missionId});
 
-  depots.fromJson(Map<String, dynamic> json) {
+  Depot.fromJson(Map<String, dynamic> json) {
     documentName = json['document_name'];
     date = json['date'];
     rep = json['rep'];

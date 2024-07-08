@@ -27,7 +27,7 @@ class _MissionPageState extends State<MissionPage> {
   int _currentIndex = 0;
   final String titleMisson = "Mission";
   late PageController _pageController;
-  List<depots>? depotsListe;
+  List<Depot>? depotsListe;
 
   final title4 = ['Home', 'Dépots', 'Décisions', 'Discussions'];
   final title3 = ['Home', 'Dépots', 'Discussions'];
@@ -51,6 +51,13 @@ class _MissionPageState extends State<MissionPage> {
   void _onItemTapped(int index) {
     setState(() {
       _currentIndex = index;
+      _pageController.jumpToPage(index);
+    });
+  }
+
+  void _onPageChanged(int index) {
+    setState(() {
+      _currentIndex = index;
     });
   }
 
@@ -58,7 +65,7 @@ class _MissionPageState extends State<MissionPage> {
   void initState() {
     super.initState();
     _currentIndex = widget.defaultIndex;
-    _pageController = PageController(initialPage: _currentIndex);
+    _pageController = PageController(initialPage: widget.defaultIndex);
     if (widget.mission.typeMission == "mairie") {
       _titles = title4;
       _pages = pages4;
@@ -84,8 +91,7 @@ class _MissionPageState extends State<MissionPage> {
       bottomNavigationBar: BottomNavigationBar(
           type: BottomNavigationBarType.fixed,
           currentIndex: _currentIndex,
-          onTap: (index) =>
-              {_pageController.jumpToPage(index), _onItemTapped(index)},
+          onTap: (index) => {_onItemTapped(index)},
           items: [
             const BottomNavigationBarItem(
                 icon: Icon(Icons.home), label: 'home'),
@@ -99,11 +105,18 @@ class _MissionPageState extends State<MissionPage> {
           ]),
       body: PageView(
         controller: _pageController,
+        onPageChanged: _onPageChanged,
         children: [
           MissionView(mission: widget.mission),
-          DepotsView(collecte: widget.collecte, mission: widget.mission),
+          DepotsView(
+              collecte: widget.collecte,
+              mission: widget.mission,
+              onItemTapped: _onItemTapped),
           if (widget.mission.typeMission == "mairie")
-            DecisionsView(collecte: widget.collecte, mission: widget.mission),
+            DecisionsView(
+                collecte: widget.collecte,
+                mission: widget.mission,
+                onItemTapped: _onItemTapped),
           DiscussionsView(collecte: widget.collecte, mission: widget.mission)
         ],
       ),

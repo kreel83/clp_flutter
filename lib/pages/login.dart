@@ -30,8 +30,6 @@ class _LogInScreen extends State<LogInScreen> {
     // final body = {'email': 'marc.borgna@gmail.com', 'password': '1801'};
     // final body = {'email': 'melodidit@gmail.com', 'password': 'Colibri09'};
     final body = {'email': email, 'password': password};
-    print('login');
-
     try {
       Response response = await post(
           headers: headers,
@@ -40,24 +38,25 @@ class _LogInScreen extends State<LogInScreen> {
           body: jsonEncode(body));
       if (response.statusCode == 200) {
         var json = await jsonDecode(response.body);
-    print(json['token']);
         if (json['token'] == 'none') {
-              showDialog(
-                            // ignore: use_build_context_synchronously
-                            context: context,
-                            builder: (BuildContext context) {
-                                return CustomDialogWidget(title: 'Attention', content: 'Identifiant ou mot de passe ne correspondent pas', context: context,);
-                            });
+          showDialog(
+              // ignore: use_build_context_synchronously
+              context: context,
+              builder: (BuildContext context) {
+                return CustomDialogWidget(
+                  title: 'Attention',
+                  content: 'Identifiant ou mot de passe ne correspondent pas',
+                  context: context,
+                );
+              });
         } else {
-        globals.user = json['nom'] + ' ' + json['prenom'];
-        globals.token = json['token'];
-        print(globals.token);
+          globals.user = json['nom'] + ' ' + json['prenom'];
+          globals.token = json['token'];
           Navigator.pushReplacement(
               // ignore: use_build_context_synchronously
               context,
-              MaterialPageRoute(builder: (context) => const Collectes()));          
+              MaterialPageRoute(builder: (context) => const Collectes()));
         }
-
       } else {
         // print('NO NO NON ');
       }
@@ -159,21 +158,20 @@ class _LogInScreen extends State<LogInScreen> {
                 child: TextFormField(
                   obscureText: _obscureText,
                   controller: passwordController,
-                   keyboardType: TextInputType.number,
-                  
+                  // keyboardType: TextInputType.number,
                   style: const TextStyle(color: Colors.white),
                   decoration: InputDecoration(
                     labelText: "password",
                     suffixIcon: IconButton(
-                    icon: Icon(
-                      _obscureText ? Icons.visibility : Icons.visibility_off,
+                      icon: Icon(
+                        _obscureText ? Icons.visibility : Icons.visibility_off,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          _obscureText = !_obscureText;
+                        });
+                      },
                     ),
-                    onPressed: () {
-                      setState(() {
-                        _obscureText = !_obscureText;
-                      });
-                    },
-                  ),
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(15),
                         borderSide: const BorderSide(
@@ -232,7 +230,12 @@ class _LogInScreen extends State<LogInScreen> {
                         ? showDialog(
                             context: context,
                             builder: (BuildContext context) {
-                              return CustomDialogWidget(title: 'Attention', content: 'Vous devez renseigner les deux champs', context: context,);
+                              return CustomDialogWidget(
+                                title: 'Attention',
+                                content:
+                                    'Vous devez renseigner les deux champs',
+                                context: context,
+                              );
                             })
                         : login(emailController.text.toString(),
                             passwordController.text.toString());
