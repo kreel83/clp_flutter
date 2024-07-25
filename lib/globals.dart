@@ -82,7 +82,8 @@ Mission? getMissionAttribute(String? status) {
 int getColorMission(String? status) {
   if (status == 'avalider') return 0xFFEDD664;
   if (status == 'valide') return 0xFF52AA52;
-  return 0xFF4397E6;
+  if (status == 'encours') return 0xFFFF4500;
+  return 0xFF000000;
 }
 
 String getAffichageMission(String? status) {

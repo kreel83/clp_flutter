@@ -115,6 +115,7 @@ class _MissionsState extends State<Missions> {
                               children: [
                                 SlidableAction(
                                   onPressed: (context) {
+                                    print('map:' + missions[index].map);
                                     _lancerGoogleMap(missions[index].map);
                                   },
                                   backgroundColor: Color(
@@ -391,7 +392,47 @@ class _MissionsState extends State<Missions> {
         SizedBox(
           height: globals.espacement,
           child: CheckboxListTile(
-            title: const Text('En cours'),
+            title: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text('Validée'),
+                const SizedBox(
+                    width: 8), // Ajoute un espace entre le texte et l'icône
+                Icon(
+                  Icons.circle,
+                  color: Color(
+                    globals.getColorMission('valide'),
+                  ),
+                ),
+                // Remplacez par l'icône souhaitée
+              ],
+            ),
+            value: conditionStatut['valide'],
+            onChanged: (value) {
+              setState(() {
+                conditionStatut['valide'] = value!;
+              });
+            },
+          ),
+        ),
+        SizedBox(
+          height: globals.espacement,
+          child: CheckboxListTile(
+            title: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text('En cours'),
+                const SizedBox(
+                    width: 8), // Ajoute un espace entre le texte et l'icône
+                Icon(
+                  Icons.circle,
+                  color: Color(
+                    globals.getColorMission('encours'),
+                  ),
+                ),
+                // Remplacez par l'icône souhaitée
+              ],
+            ),
             value: conditionStatut['encours'],
             onChanged: (value) {
               setState(() {
@@ -403,7 +444,21 @@ class _MissionsState extends State<Missions> {
         SizedBox(
           height: globals.espacement,
           child: CheckboxListTile(
-            title: const Text('A valider'),
+            title: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text('A valider'),
+                const SizedBox(
+                    width: 8), // Ajoute un espace entre le texte et l'icône
+                Icon(
+                  Icons.circle,
+                  color: Color(
+                    globals.getColorMission('avalider'),
+                  ),
+                ),
+                // Remplacez par l'icône souhaitée
+              ],
+            ),
             value: conditionStatut['avalider'],
             onChanged: (value) {
               setState(() {
@@ -415,7 +470,21 @@ class _MissionsState extends State<Missions> {
         SizedBox(
           height: globals.espacement,
           child: CheckboxListTile(
-            title: const Text('Annulée'),
+            title: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text('Annulée'),
+                const SizedBox(
+                    width: 8), // Ajoute un espace entre le texte et l'icône
+                Icon(
+                  Icons.circle,
+                  color: Color(
+                    globals.getColorMission('annule'),
+                  ),
+                ),
+                // Remplacez par l'icône souhaitée
+              ],
+            ),
             value: conditionStatut['annule'],
             onChanged: (value) {
               setState(() {
@@ -427,7 +496,21 @@ class _MissionsState extends State<Missions> {
         SizedBox(
           height: globals.espacement,
           child: CheckboxListTile(
-            title: const Text('Refusée'),
+            title: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text('Refusée'),
+                const SizedBox(
+                    width: 8), // Ajoute un espace entre le texte et l'icône
+                Icon(
+                  Icons.circle,
+                  color: Color(
+                    globals.getColorMission('refuse'),
+                  ),
+                ),
+                // Remplacez par l'icône souhaitée
+              ],
+            ),
             value: conditionStatut['refuse'],
             onChanged: (value) {
               setState(() {
@@ -436,18 +519,6 @@ class _MissionsState extends State<Missions> {
             },
           ),
         ),
-        SizedBox(
-          height: globals.espacement,
-          child: CheckboxListTile(
-            title: const Text('Validée'),
-            value: conditionStatut['valide'],
-            onChanged: (value) {
-              setState(() {
-                conditionStatut['valide'] = value!;
-              });
-            },
-          ),
-        )
       ],
     );
   }

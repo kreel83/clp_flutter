@@ -1,4 +1,5 @@
 import 'package:clp_flutter/models/collecte.dart';
+import 'package:clp_flutter/pages/login.dart';
 import 'package:clp_flutter/pages/missions_liste.dart';
 import 'package:clp_flutter/pages/view_pdf.dart';
 import 'package:clp_flutter/services/collectes_service.dart';
@@ -248,12 +249,29 @@ class _CollectesState extends State<Collectes> {
     }
   }
 
+  void _logout(BuildContext context) {
+    // Logique de déconnexion ici
+    // Vous pouvez rediriger l'utilisateur vers l'écran de connexion
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => LogInScreen()),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
         title: const Text('Liste des collectes'),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.power_settings_new),
+            onPressed: () {
+              _logout(context);
+            },
+          ),
+        ],
       ),
       body: RefreshIndicator(
           onRefresh: _refresh, child: BuildListCollecte(context)),
@@ -292,91 +310,91 @@ class _CollectesState extends State<Collectes> {
       //         },
       //       )
       //     : null,
-      endDrawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: <Widget>[
-            DrawerHeader(
-              decoration: BoxDecoration(
-                color: globals.mainColor,
-              ),
-              child: const Text(
-                'CLP',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 24,
-                ),
-              ),
-            ),
-            Column(
-              children: [
-                SizedBox(
-                  height: globals.espacement,
-                  child: CheckboxListTile(
-                    title: const Text('En cours'),
-                    value: condition['1'],
-                    onChanged: (value) {
-                      setState(() {
-                        condition['1'] = value!;
-                      });
-                    },
-                  ),
-                ),
-                SizedBox(
-                  height: globals.espacement,
-                  child: CheckboxListTile(
-                    title: const Text('Annulée'),
-                    value: condition['2'],
-                    onChanged: (value) {
-                      setState(() {
-                        condition['2'] = value!;
-                      });
-                    },
-                  ),
-                ),
-                SizedBox(
-                  height: globals.espacement,
-                  child: CheckboxListTile(
-                    title: const Text('Refusée'),
-                    value: condition['3'],
-                    onChanged: (value) {
-                      setState(() {
-                        condition['3'] = value!;
-                      });
-                    },
-                  ),
-                ),
-                SizedBox(
-                  height: globals.espacement,
-                  child: CheckboxListTile(
-                    title: const Text('Validée'),
-                    value: condition['4'],
-                    onChanged: (value) {
-                      setState(() {
-                        condition['4'] = value!;
-                      });
-                    },
-                  ),
-                ),
-                SizedBox(
-                  height: globals.espacement,
-                  child: CheckboxListTile(
-                    title: const Text('Payée'),
-                    value: condition['5'],
-                    onChanged: (value) {
-                      setState(() {
-                        condition['5'] = value!;
-                      });
-                    },
-                  ),
-                )
-              ],
-            )
+      // endDrawer: Drawer(
+      //   child: ListView(
+      //     padding: EdgeInsets.zero,
+      //     children: <Widget>[
+      //       DrawerHeader(
+      //         decoration: BoxDecoration(
+      //           color: globals.mainColor,
+      //         ),
+      //         child: const Text(
+      //           'CLP',
+      //           style: TextStyle(
+      //             color: Colors.white,
+      //             fontSize: 24,
+      //           ),
+      //         ),
+      //       ),
+      //       Column(
+      //         children: [
+      //           SizedBox(
+      //             height: globals.espacement,
+      //             child: CheckboxListTile(
+      //               title: const Text('En cours'),
+      //               value: condition['1'],
+      //               onChanged: (value) {
+      //                 setState(() {
+      //                   condition['1'] = value!;
+      //                 });
+      //               },
+      //             ),
+      //           ),
+      //           SizedBox(
+      //             height: globals.espacement,
+      //             child: CheckboxListTile(
+      //               title: const Text('Annulée'),
+      //               value: condition['2'],
+      //               onChanged: (value) {
+      //                 setState(() {
+      //                   condition['2'] = value!;
+      //                 });
+      //               },
+      //             ),
+      //           ),
+      //           SizedBox(
+      //             height: globals.espacement,
+      //             child: CheckboxListTile(
+      //               title: const Text('Refusée'),
+      //               value: condition['3'],
+      //               onChanged: (value) {
+      //                 setState(() {
+      //                   condition['3'] = value!;
+      //                 });
+      //               },
+      //             ),
+      //           ),
+      //           SizedBox(
+      //             height: globals.espacement,
+      //             child: CheckboxListTile(
+      //               title: const Text('Validée'),
+      //               value: condition['4'],
+      //               onChanged: (value) {
+      //                 setState(() {
+      //                   condition['4'] = value!;
+      //                 });
+      //               },
+      //             ),
+      //           ),
+      //           SizedBox(
+      //             height: globals.espacement,
+      //             child: CheckboxListTile(
+      //               title: const Text('Payée'),
+      //               value: condition['5'],
+      //               onChanged: (value) {
+      //                 setState(() {
+      //                   condition['5'] = value!;
+      //                 });
+      //               },
+      //             ),
+      //           )
+      //         ],
+      //       )
 
-            // Ajoute d'autres options du menu selon tes besoins
-          ],
-        ),
-      ),
+      //       // Ajoute d'autres options du menu selon tes besoins
+      //     ],
+      //   ),
+      // ),
     );
   }
 }
