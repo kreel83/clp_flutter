@@ -273,8 +273,11 @@ class _CollectesState extends State<Collectes> {
           ),
         ],
       ),
-      body: RefreshIndicator(
-          onRefresh: _refresh, child: BuildListCollecte(context)),
+      body: PopScope(
+        canPop: false,
+        child: RefreshIndicator(
+            onRefresh: _refresh, child: BuildListCollecte(context)),
+      ),
       floatingActionButton: FutureBuilder<dynamic>(
         future: collectesListe,
         builder: (context, snapshot) {

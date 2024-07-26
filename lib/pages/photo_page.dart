@@ -143,7 +143,8 @@ class _PhotoPageState extends State<PhotoPage> {
         // ignore: unnecessary_null_comparison
         body: PhotoView(
           imageProvider: NetworkImage(
-            '${'http://surveilleco.vigilience.corp/collectes/' + widget.collecte.toString() + '/missions/' + widget.depot.missionId.toString() + '/' + widget.depot.type}s/' +
+            // '${'http://surveilleco.vigilience.corp/collectes/' + widget.collecte.toString() + '/missions/' + widget.depot.missionId.toString() + '/' + widget.depot.type}s/' + widget.depot.documentName,
+            '${'https://www.la-gazette-eco.fr/api/clp/get_photo/' + widget.collecte.toString() + '/' + widget.depot.missionId.toString() + '/' + widget.depot.type}s/' +
                 widget.depot.documentName,
           ),
         ));

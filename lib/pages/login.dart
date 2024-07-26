@@ -28,8 +28,8 @@ class _LogInScreen extends State<LogInScreen> {
     };
 
     // final body = {'email': 'marc.borgna@gmail.com', 'password': '1801'};
-    // final body = {'email': 'melodidit@gmail.com', 'password': 'Colibri09'};
-    final body = {'email': email, 'password': password};
+    final body = {'email': 'melodidit@gmail.com', 'password': 'Colibri09'};
+    // final body = {'email': email, 'password': password};
     try {
       Response response = await post(
           headers: headers,
@@ -90,172 +90,185 @@ class _LogInScreen extends State<LogInScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xff000725),
-      body: Center(
-        child: Column(
-          children: [
-            Center(
-              child: Container(
-                width: double.infinity,
-                height: 180,
-                decoration: const BoxDecoration(
-                    color: Color.fromARGB(255, 87, 149, 234),
-                    borderRadius:
-                        BorderRadius.only(bottomRight: Radius.circular(150))),
-                child: const Padding(
-                  padding: EdgeInsets.fromLTRB(20, 70, 20, 50),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'C.L.P',
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 25),
-                      ),
-                    ],
+      body: PopScope(
+        canPop: false,
+        child: Center(
+          child: Column(
+            children: [
+              Center(
+                child: Container(
+                  width: double.infinity,
+                  height: 180,
+                  decoration: const BoxDecoration(
+                      color: Color.fromARGB(255, 87, 149, 234),
+                      borderRadius:
+                          BorderRadius.only(bottomRight: Radius.circular(150))),
+                  child: const Padding(
+                    padding: EdgeInsets.fromLTRB(20, 70, 20, 50),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'C.L.P',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 25),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
-            Theme(
-              data: ThemeData(
-                hintColor: Colors.blue,
-              ),
-              child: Padding(
-                padding: const EdgeInsets.only(top: 50, right: 20, left: 20),
-                child: TextFormField(
-                  controller: emailController,
-                  style: const TextStyle(color: Colors.white),
-                  decoration: InputDecoration(
-                    labelText: "email",
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15),
-                        borderSide: const BorderSide(
-                            color: Color.fromARGB(255, 29, 86, 166), width: 1)),
-                    disabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15),
-                        borderSide: const BorderSide(
-                            color: Color.fromARGB(255, 29, 86, 166), width: 1)),
-                    enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15),
-                        borderSide: const BorderSide(
-                            color: Color.fromARGB(255, 29, 86, 166), width: 1)),
-                    focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15),
-                        borderSide: const BorderSide(
-                            color: Color.fromARGB(255, 29, 86, 166), width: 1)),
+              Theme(
+                data: ThemeData(
+                  hintColor: Colors.blue,
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 50, right: 20, left: 20),
+                  child: TextFormField(
+                    controller: emailController,
+                    style: const TextStyle(color: Colors.white),
+                    decoration: InputDecoration(
+                      labelText: "email",
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15),
+                          borderSide: const BorderSide(
+                              color: Color.fromARGB(255, 29, 86, 166),
+                              width: 1)),
+                      disabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15),
+                          borderSide: const BorderSide(
+                              color: Color.fromARGB(255, 29, 86, 166),
+                              width: 1)),
+                      enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15),
+                          borderSide: const BorderSide(
+                              color: Color.fromARGB(255, 29, 86, 166),
+                              width: 1)),
+                      focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15),
+                          borderSide: const BorderSide(
+                              color: Color.fromARGB(255, 29, 86, 166),
+                              width: 1)),
+                    ),
                   ),
                 ),
               ),
-            ),
-            Theme(
-              data: ThemeData(
-                hintColor: Colors.blue,
-              ),
-              child: Padding(
-                padding: const EdgeInsets.only(top: 20, right: 20, left: 20),
-                child: TextFormField(
-                  obscureText: _obscureText,
-                  controller: passwordController,
-                  // keyboardType: TextInputType.number,
-                  style: const TextStyle(color: Colors.white),
-                  decoration: InputDecoration(
-                    labelText: "password",
-                    suffixIcon: IconButton(
-                      icon: Icon(
-                        _obscureText ? Icons.visibility : Icons.visibility_off,
+              Theme(
+                data: ThemeData(
+                  hintColor: Colors.blue,
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 20, right: 20, left: 20),
+                  child: TextFormField(
+                    obscureText: _obscureText,
+                    controller: passwordController,
+                    // keyboardType: TextInputType.number,
+                    style: const TextStyle(color: Colors.white),
+                    decoration: InputDecoration(
+                      labelText: "password",
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          _obscureText
+                              ? Icons.visibility
+                              : Icons.visibility_off,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _obscureText = !_obscureText;
+                          });
+                        },
                       ),
-                      onPressed: () {
-                        setState(() {
-                          _obscureText = !_obscureText;
-                        });
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15),
+                          borderSide: const BorderSide(
+                              color: Color.fromARGB(255, 29, 86, 166),
+                              width: 1)),
+                      disabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15),
+                          borderSide: const BorderSide(
+                              color: Color.fromARGB(255, 29, 86, 166),
+                              width: 1)),
+                      enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15),
+                          borderSide: const BorderSide(
+                              color: Color.fromARGB(255, 29, 86, 166),
+                              width: 1)),
+                      focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15),
+                          borderSide: const BorderSide(
+                              color: Color.fromARGB(255, 29, 86, 166),
+                              width: 1)),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(right: 20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    InkWell(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    const ForgetPasswordScreen()));
                       },
+                      child: const Text(
+                        'Mot de passe oublié ?',
+                        style: TextStyle(
+                            color: Color.fromARGB(255, 29, 86, 166),
+                            fontSize: 10),
+                      ),
                     ),
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15),
-                        borderSide: const BorderSide(
-                            color: Color.fromARGB(255, 29, 86, 166), width: 1)),
-                    disabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15),
-                        borderSide: const BorderSide(
-                            color: Color.fromARGB(255, 29, 86, 166), width: 1)),
-                    enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15),
-                        borderSide: const BorderSide(
-                            color: Color.fromARGB(255, 29, 86, 166), width: 1)),
-                    focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15),
-                        borderSide: const BorderSide(
-                            color: Color.fromARGB(255, 29, 86, 166), width: 1)),
-                  ),
+                  ],
                 ),
               ),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            Padding(
-              padding: const EdgeInsets.only(right: 20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  InkWell(
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  const ForgetPasswordScreen()));
-                    },
-                    child: const Text(
-                      'Mot de passe oublié ?',
-                      style: TextStyle(
-                          color: Color.fromARGB(255, 29, 86, 166),
-                          fontSize: 10),
-                    ),
-                  ),
-                ],
+              const SizedBox(
+                height: 20,
               ),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            Padding(
-                padding: const EdgeInsets.only(left: 20, right: 20),
-                child: GestureDetector(
-                  onTap: () {
-                    (emailController.text.toString() == '' ||
-                            passwordController.text.toString() == "")
-                        ? showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return CustomDialogWidget(
-                                title: 'Attention',
-                                content:
-                                    'Vous devez renseigner les deux champs',
-                                context: context,
-                              );
-                            })
-                        : login(emailController.text.toString(),
-                            passwordController.text.toString());
-                  },
-                  child: Container(
-                    height: 50,
-                    decoration: BoxDecoration(
-                        color: const Color.fromARGB(255, 29, 86, 166),
-                        borderRadius: BorderRadius.circular(16)),
-                    child: const Center(
-                        child: Text(
-                      'Se connecter',
-                      style: TextStyle(color: Colors.white),
-                    )),
-                  ),
-                )),
-            const SizedBox(
-              height: 50,
-            ),
-          ],
+              Padding(
+                  padding: const EdgeInsets.only(left: 20, right: 20),
+                  child: GestureDetector(
+                    onTap: () {
+                      (emailController.text.toString() == '' ||
+                              passwordController.text.toString() == "")
+                          ? showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return CustomDialogWidget(
+                                  title: 'Attention',
+                                  content:
+                                      'Vous devez renseigner les deux champs',
+                                  context: context,
+                                );
+                              })
+                          : login(emailController.text.toString(),
+                              passwordController.text.toString());
+                    },
+                    child: Container(
+                      height: 50,
+                      decoration: BoxDecoration(
+                          color: const Color.fromARGB(255, 29, 86, 166),
+                          borderRadius: BorderRadius.circular(16)),
+                      child: const Center(
+                          child: Text(
+                        'Se connecter',
+                        style: TextStyle(color: Colors.white),
+                      )),
+                    ),
+                  )),
+              const SizedBox(
+                height: 50,
+              ),
+            ],
+          ),
         ),
       ),
     );
