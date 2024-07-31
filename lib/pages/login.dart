@@ -27,8 +27,8 @@ class _LogInScreen extends State<LogInScreen> {
       'Charset': 'utf-8'
     };
 
-    // final body = {'email': 'marc.borgna@gmail.com', 'password': '1801'};
-    final body = {'email': 'melodidit@gmail.com', 'password': 'Colibri09'};
+    final body = {'email': 'marc.borgna@gmail.com', 'password': '1801'};
+    // final body = {'email': 'melodidit@gmail.com', 'password': 'Colibri09'};
     // final body = {'email': email, 'password': password};
     try {
       Response response = await post(

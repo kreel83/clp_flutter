@@ -9,6 +9,7 @@ import 'package:image_picker/image_picker.dart';
 import '../../models/depot.dart';
 import '../../services/depots_service.dart';
 import '../../utils/photo.dart' as photos;
+import '../../globals.dart' as globals;
 
 class DecisionsView extends StatefulWidget {
   const DecisionsView(
@@ -33,6 +34,7 @@ class _DecisionsViewState extends State<DecisionsView> {
   late List<XFile>? imageFileList = [];
   final ImagePicker imagePicker = ImagePicker();
   List<bool> afficheCircles = [];
+  List<bool> isSelected = [];
   bool afficheCirclesAll = false;
   ////////////////////////////////
 
@@ -51,6 +53,7 @@ class _DecisionsViewState extends State<DecisionsView> {
       // ignore: unused_local_variable
       for (XFile element in selectedImages) {
         afficheCircles.add(false);
+        isSelected.add(true);
       }
     });
   }
@@ -76,19 +79,21 @@ class _DecisionsViewState extends State<DecisionsView> {
                   showModalBottomSheet(
                     context: context,
                     builder: (BuildContext context) {
-                      return SizedBox(
+                      return Container(
                         height: 200,
+                        decoration: BoxDecoration(color: globals.mainColor),
                         child: Column(
                           children: <Widget>[
                             ListTile(
-                              leading: const Icon(Icons.camera_alt),
-                              title: const Text("A partir de l'appareil photo"),
+                              leading: const Icon(
+                                Icons.camera_alt,
+                                color: Colors.white,
+                              ),
+                              title: const Text(
+                                "A partir de l'appareil photo",
+                                style: TextStyle(color: Colors.white),
+                              ),
                               onTap: () async {
-                                setState(() {
-                                  decisions = [];
-                                  Navigator.pop(context);
-                                  isLoading = true;
-                                });
                                 var state = await photos.takePicture(
                                     widget.mission,
                                     widget.collecte,
@@ -101,31 +106,42 @@ class _DecisionsViewState extends State<DecisionsView> {
                                       isLoading = false;
                                     });
                                   });
+                                  Alert.showToast(
+                                      'Document ajouté avec succés');
                                 } else {
                                   // ignore: use_build_context_synchronously
                                   Navigator.pop(context);
                                 }
-                                Alert.showToast('Document ajouté avec succés');
                               },
                             ),
                             ListTile(
-                              leading: const Icon(Icons.browse_gallery),
-                              title:
-                                  const Text("A partir de la gallerie photo"),
+                              leading: const Icon(
+                                Icons.phone,
+                                color: Colors.white,
+                              ),
+                              title: const Text(
+                                "A partir de la gallerie photo",
+                                style: TextStyle(color: Colors.white),
+                              ),
                               onTap: () {
                                 _pickMultiImage().then((value) async {
-                                  await Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => ImageUpload(
-                                          typeDepot: 'decisions',
-                                          idMission: widget.mission,
-                                          idCollecte: widget.collecte,
-                                          imageFileList: imageFileList,
-                                          afficheCircles: afficheCircles,
-                                          indexTab: 2),
-                                    ),
-                                  );
+                                  if (imageFileList!.isEmpty) {
+                                    Navigator.pop(context);
+                                  } else {
+                                    await Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => ImageUpload(
+                                            typeDepot: 'decisions',
+                                            idMission: widget.mission,
+                                            idCollecte: widget.collecte,
+                                            imageFileList: imageFileList,
+                                            afficheCircles: afficheCircles,
+                                            isSelected: isSelected,
+                                            indexTab: 2),
+                                      ),
+                                    );
+                                  }
                                 });
                               },
                             ),

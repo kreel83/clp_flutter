@@ -9,6 +9,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../services/depots_service.dart';
 import 'package:clp_flutter/models/depot.dart';
+import '../../globals.dart' as globals;
 
 class DepotsView extends StatefulWidget {
   const DepotsView(
@@ -34,7 +35,9 @@ class _DepotsViewState extends State<DepotsView> {
   late List<XFile>? imageFileList = [];
   final ImagePicker imagePicker = ImagePicker();
   List<bool> afficheCircles = [];
+  List<bool> isSelected = [];
   bool afficheCirclesAll = false;
+  PersistentBottomSheetController? _bottomSheetController;
 
   ////////////////////////////////
 
@@ -53,6 +56,7 @@ class _DepotsViewState extends State<DepotsView> {
       // ignore: unused_local_variable
       for (XFile element in selectedImages) {
         afficheCircles.add(false);
+        isSelected.add(true);
       }
     });
   }
@@ -68,7 +72,91 @@ class _DepotsViewState extends State<DepotsView> {
     });
   }
 
-  // getDeps(widget.mission);
+  Future<void> _pickImage(BuildContext context) async {
+    var state =
+        await takePicture(widget.mission, widget.collecte, 'depots', context);
+    print('state : ' + state.toString());
+    if (state) {
+      await getDeps(widget.mission).then((value) {
+        setState(() {
+          depots = value;
+          isLoading = false;
+        });
+        Alert.showToast('Document ajouté avec succés');
+      });
+    } else {
+      // ignore: use_build_context_synchronously
+    }
+  }
+
+  void _showBottomSheet(BuildContext context) {
+    _bottomSheetController = Scaffold.of(context).showBottomSheet(
+      (context) {
+        return Container(
+          height: 200,
+          decoration: BoxDecoration(color: globals.mainColor),
+          child: Column(
+            children: <Widget>[
+              ListTile(
+                leading: const Icon(
+                  Icons.camera_alt,
+                  color: Colors.white,
+                ),
+                title: const Text("A partir de l'appareil photo",
+                    style: TextStyle(color: Colors.white)),
+                onTap: () async {
+                  _bottomSheetController!.close();
+                  _pickImage(context);
+                },
+              ),
+              ListTile(
+                leading: const Icon(
+                  Icons.photo,
+                  color: Colors.white,
+                ),
+                title: const Text(
+                  "A partir de la gallerie photo",
+                  style: TextStyle(color: Colors.white),
+                ),
+                onTap: () {
+                  _pickMultiImage().then((value) async {
+                    if (imageFileList!.isEmpty) {
+                      Navigator.pop(context);
+                    } else {
+                      final int? result = await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ImageUpload(
+                              typeDepot: 'depots',
+                              idMission: widget.mission,
+                              idCollecte: widget.collecte,
+                              imageFileList: imageFileList,
+                              afficheCircles: afficheCircles,
+                              isSelected: isSelected,
+                              indexTab: 1),
+                        ),
+                      );
+
+                      if (result != null && result == 1) {
+                        setState(() async {
+                          await getDeps(widget.mission).then((value) {
+                            setState(() {
+                              depots = value;
+                              isLoading = false;
+                            });
+                          });
+                        });
+                      }
+                    }
+                  });
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -77,75 +165,7 @@ class _DepotsViewState extends State<DepotsView> {
             ? FloatingActionButton(
                 child: const Icon(Icons.add),
                 onPressed: () {
-                  showModalBottomSheet(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return SizedBox(
-                        height: 200,
-                        child: Column(
-                          children: <Widget>[
-                            ListTile(
-                              leading: const Icon(Icons.camera_alt),
-                              title: const Text("A partir de l'appareil photo"),
-                              onTap: () async {
-                                setState(() {
-                                  depots = [];
-                                  Navigator.pop(context);
-                                  isLoading = true;
-                                });
-                                var state = await takePicture(widget.mission,
-                                    widget.collecte, 'depots', context);
-                                if (state) {
-                                  await getDeps(widget.mission).then((value) {
-                                    setState(() {
-                                      depots = value;
-                                      isLoading = false;
-                                    });
-                                  });
-                                } else {
-                                  // ignore: use_build_context_synchronously
-                                  Navigator.pop(context);
-                                }
-                                Alert.showToast('Document ajouté avec succés');
-                              },
-                            ),
-                            ListTile(
-                              leading: const Icon(Icons.browse_gallery),
-                              title:
-                                  const Text("A partir de la gallerie photo"),
-                              onTap: () {
-                                _pickMultiImage().then((value) async {
-                                  final int? result = await Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => ImageUpload(
-                                          typeDepot: 'depots',
-                                          idMission: widget.mission,
-                                          idCollecte: widget.collecte,
-                                          imageFileList: imageFileList,
-                                          afficheCircles: afficheCircles,
-                                          indexTab: 1),
-                                    ),
-                                  );
-                                  if (result != null && result == 1) {
-                                    setState(() async {
-                                      await getDeps(widget.mission)
-                                          .then((value) {
-                                        setState(() {
-                                          depots = value;
-                                          isLoading = false;
-                                        });
-                                      });
-                                    });
-                                  }
-                                });
-                              },
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                  );
+                  _showBottomSheet(context);
                 },
               )
             : null,

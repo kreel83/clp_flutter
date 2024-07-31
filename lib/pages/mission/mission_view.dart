@@ -217,6 +217,7 @@ class _MissionViewState extends State<MissionView> {
                                         onTap: () {
                                           FocusScope.of(context).requestFocus(
                                               FocusNode()); // Pour empêcher l'ouverture du clavier
+
                                           _selectDate(context);
                                         },
                                       ),

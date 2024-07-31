@@ -59,6 +59,7 @@ class _MissionsState extends State<Missions> {
   @override
   void initState() {
     super.initState();
+
     setState(() {
       missions = getMiss(widget.collecte);
     });
@@ -106,6 +107,7 @@ class _MissionsState extends State<Missions> {
                     padding: const EdgeInsets.all(8.0),
                     itemCount: ListeDesMissionsAAfficher.length,
                     itemBuilder: (BuildContext context, int index) {
+                      print(ListeDesMissionsAAfficher[0].toString());
                       return SizedBox(
                         child: Card(
                           child: Slidable(
@@ -164,17 +166,28 @@ class _MissionsState extends State<Missions> {
                               isThreeLine: true,
                               trailing: Padding(
                                 padding: const EdgeInsets.all(8.0),
-                                child: missions[index].typeMission == 'terrain'
-                                    ? Image.asset(
-                                        'assets/images/terrain.png',
-                                        width: 35,
-                                        height: 35,
-                                      )
-                                    : Image.asset(
-                                        'assets/images/mairie.png',
-                                        width: 35,
-                                        height: 35,
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    if (ListeDesMissionsAAfficher[index]
+                                            .messages! >
+                                        0)
+                                      const Icon(
+                                        Icons.email,
+                                        size: 18,
                                       ),
+                                    const SizedBox(
+                                      height: 4,
+                                    ),
+                                    if (ListeDesMissionsAAfficher[index]
+                                            .photos! >
+                                        0)
+                                      const Icon(
+                                        Icons.photo_camera,
+                                        size: 18,
+                                      ),
+                                  ],
+                                ),
                               ),
                               leading: Column(
                                 children: [
@@ -202,6 +215,21 @@ class _MissionsState extends State<Missions> {
                                 Text(
                                   '  ${ListeDesMissionsAAfficher[index].typeMission}',
                                   style: const TextStyle(color: Colors.grey),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 20),
+                                  child:
+                                      missions[index].typeMission == 'terrain'
+                                          ? Image.asset(
+                                              'assets/images/terrain.png',
+                                              width: 24,
+                                              height: 24,
+                                            )
+                                          : Image.asset(
+                                              'assets/images/mairie.png',
+                                              width: 24,
+                                              height: 24,
+                                            ),
                                 ),
                               ]),
                               subtitle: ListeDesMissionsAAfficher[index]
@@ -253,23 +281,17 @@ class _MissionsState extends State<Missions> {
                   ),
                 ),
               ),
-              Expanded(
-                child: Column(
-                  children: [
-                    _conditionsDesStatuts(),
-                    const Divider(
-                      height: 40,
-                    ),
-                    _conditionsDesCommunes(),
-                    const Divider(
-                      height: 40,
-                    ),
-                    _typeDeMissions(),
-                    const SizedBox(
-                      height: 40,
-                    )
-                  ],
-                ),
+              _conditionsDesStatuts(),
+              const Divider(
+                height: 40,
+              ),
+              _conditionsDesCommunes(),
+              const Divider(
+                height: 40,
+              ),
+              _typeDeMissions(),
+              const SizedBox(
+                height: 40,
               )
             ],
           ),

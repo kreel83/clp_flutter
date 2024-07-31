@@ -13,6 +13,8 @@ class Mission {
   late bool moreInfo;
   String? commune;
   String? passage;
+  int? messages;
+  int? photos;
 
   Mission(
       {this.id,
@@ -28,7 +30,9 @@ class Mission {
       required this.clp,
       required this.moreInfo,
       this.commune,
-      this.passage});
+      this.passage,
+      this.messages,
+      this.photos});
 
   Mission.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -45,6 +49,8 @@ class Mission {
     moreInfo = false;
     commune = json['commune'];
     passage = json['passage'];
+    messages = json['messages'];
+    photos = json['photos'];
   }
 
   Map<String, dynamic> toJson() {
@@ -63,6 +69,8 @@ class Mission {
     data['commune'] = commune;
     data['clp'] = clp;
     data['passage'] = passage;
+    data['messages'] = messages;
+    data['photos'] = photos;
     return data;
   }
 }
