@@ -1,3 +1,4 @@
+import 'package:clp_flutter/pages/mapbox/FullMap.dart';
 import 'package:flutter/material.dart';
 import './pages/login.dart';
 import 'package:flutter/services.dart';
@@ -63,6 +64,7 @@ class MyApp extends StatelessWidget {
         ),
       ),
       home: const LogInScreen(),
+      //home: CarteMapboxPage(),
     );
   }
 }

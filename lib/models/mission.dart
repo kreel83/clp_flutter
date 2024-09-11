@@ -15,24 +15,29 @@ class Mission {
   String? passage;
   int? messages;
   int? photos;
+  String? parcelle;
+  String? coords;
 
-  Mission(
-      {this.id,
-      this.statut,
-      this.createdAt,
-      this.typeMission,
-      this.map,
-      this.adresse,
-      this.name,
-      this.ville,
-      this.tarif,
-      this.phase,
-      required this.clp,
-      required this.moreInfo,
-      this.commune,
-      this.passage,
-      this.messages,
-      this.photos});
+  Mission({
+    this.id,
+    this.statut,
+    this.createdAt,
+    this.typeMission,
+    this.map,
+    this.adresse,
+    this.name,
+    this.ville,
+    this.tarif,
+    this.phase,
+    required this.clp,
+    required this.moreInfo,
+    this.commune,
+    this.passage,
+    this.messages,
+    this.photos,
+    this.parcelle,
+    this.coords,
+  });
 
   Mission.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -51,6 +56,8 @@ class Mission {
     passage = json['passage'];
     messages = json['messages'];
     photos = json['photos'];
+    parcelle = json['parcelle'];
+    coords = json['coords'];
   }
 
   Map<String, dynamic> toJson() {
@@ -71,6 +78,9 @@ class Mission {
     data['passage'] = passage;
     data['messages'] = messages;
     data['photos'] = photos;
+    // ignore: unrelated_type_equality_checks
+    data['parcelle'] = parcelle;
+    data['coords'] = coords;
     return data;
   }
 }

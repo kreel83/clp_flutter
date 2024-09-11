@@ -2,6 +2,7 @@
 
 import 'package:clp_flutter/models/mission.dart';
 import 'package:clp_flutter/pages/createMission/departement.dart';
+import 'package:clp_flutter/pages/mapbox/FullMap.dart';
 import 'package:clp_flutter/utils/message.dart';
 import './mission_page.dart';
 import 'package:clp_flutter/services/missions_service.dart';
@@ -107,7 +108,7 @@ class _MissionsState extends State<Missions> {
                     padding: const EdgeInsets.all(8.0),
                     itemCount: ListeDesMissionsAAfficher.length,
                     itemBuilder: (BuildContext context, int index) {
-                      print(ListeDesMissionsAAfficher[0].toString());
+                      print(ListeDesMissionsAAfficher[index].parcelle);
                       return SizedBox(
                         child: Card(
                           child: Slidable(
@@ -129,6 +130,23 @@ class _MissionsState extends State<Missions> {
                                   icon: Icons.map,
                                   label: 'google map',
                                 ),
+                                if (ListeDesMissionsAAfficher[index].parcelle ==
+                                    "true")
+                                  SlidableAction(
+                                    onPressed: (context) {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => CarteMapboxPage(
+                                                  mission:
+                                                      ListeDesMissionsAAfficher[
+                                                          index])));
+                                    },
+                                    backgroundColor: Colors.amber.shade200,
+                                    foregroundColor: Colors.white,
+                                    icon: Icons.map,
+                                    label: 'map box',
+                                  ),
                               ],
                             ),
                             endActionPane: ListeDesMissionsAAfficher[index]

@@ -50,7 +50,7 @@ dependencies:
   path_provider: ^2.1.1
   url_launcher: ^6.2.1
   fluttertoast: ^8.0.9
-  cached_network_image: ^3.2.3
+  mapbox_gl: ^0.16.0
 
   
 

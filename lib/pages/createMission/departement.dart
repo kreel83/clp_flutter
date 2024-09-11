@@ -35,6 +35,7 @@ class _DepartementPageState extends State<DepartementPage> {
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              Text('Département'),
               SizedBox(
                 width: 100.0,
                 child: Center(
@@ -57,7 +58,7 @@ class _DepartementPageState extends State<DepartementPage> {
                               collecte: widget.collecte,
                               dep: departmentController.text)));
                 },
-                child: const Text('Valider'),
+                child: const Text('Etape suivante'),
               ),
             ],
           ),
