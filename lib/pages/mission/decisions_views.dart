@@ -43,19 +43,30 @@ class _DecisionsViewState extends State<DecisionsView> {
     return missions;
   }
 
-  Future<void> _pickMultiImage() async {
+  Future<void> _pickMultiImage(state) async {
+      if (state) {
+        setState(() {
+          imageFileList = [];
+          afficheCircles = [];
+          isSelected = [];
+        });        
+      }
     final List<XFile> selectedImages =
         (await imagePicker.pickMultiImage()).cast<XFile>();
-    if (selectedImages.isNotEmpty) {
-      imageFileList!.addAll(selectedImages);
-    }
-    setState(() {
-      // ignore: unused_local_variable
-      for (XFile element in selectedImages) {
-        afficheCircles.add(false);
-        isSelected.add(true);
-      }
-    });
+        print('state : '+selectedImages.length.toString());
+        if (selectedImages.isNotEmpty) {
+          setState(() {
+            for (XFile element in selectedImages) {
+              bool isDuplicate = imageFileList!.any((existingElement) => existingElement.path == element.path);
+              if (!isDuplicate) {
+                print('coucou');
+                imageFileList!.add(element);
+                afficheCircles.add(false);
+                isSelected.add(true);
+              }
+            }
+          });
+        }
   }
 
   @override
@@ -124,7 +135,7 @@ class _DecisionsViewState extends State<DecisionsView> {
                                 style: TextStyle(color: Colors.white),
                               ),
                               onTap: () {
-                                _pickMultiImage().then((value) async {
+                                _pickMultiImage(true).then((value) async {
                                   if (imageFileList!.isEmpty) {
                                     Navigator.pop(context);
                                   } else {
@@ -138,7 +149,9 @@ class _DecisionsViewState extends State<DecisionsView> {
                                             imageFileList: imageFileList,
                                             afficheCircles: afficheCircles,
                                             isSelected: isSelected,
-                                            indexTab: 2),
+                                            indexTab: 2,
+                                            pickMultiImage: _pickMultiImage
+                                            ),
                                       ),
                                     );
                                   }

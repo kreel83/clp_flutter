@@ -20,7 +20,9 @@ class ImageUpload extends StatefulWidget {
       required this.imageFileList,
       required this.afficheCircles,
       required this.isSelected,
-      required this.indexTab});
+      required this.indexTab,
+      required this.pickMultiImage,
+      });
 
   var imageFileList;
   final afficheCircles;
@@ -29,7 +31,7 @@ class ImageUpload extends StatefulWidget {
   final idMission;
   final idCollecte;
   final indexTab;
-
+  final pickMultiImage;
   @override
 // ignore: library_private_types_in_public_api
   _ImageUploadState createState() => _ImageUploadState();
@@ -38,6 +40,8 @@ class ImageUpload extends StatefulWidget {
 class _ImageUploadState extends State<ImageUpload> {
   bool afficheCirclesAll = false;
   bool isRecord = false;
+    final ImagePicker imagePicker = ImagePicker();
+  
 
   sendImageToAPI(List<XFile> imageFile, typeDepot, mission, isSelected) async {
     var uri = Uri.parse(
@@ -112,9 +116,38 @@ class _ImageUploadState extends State<ImageUpload> {
   @override
   void initState() {
     super.initState();
+    setState(() {
+      
+    });
   }
 
   bool _condition = false; // Condition que vous souhaitez vérifier
+  
+
+    Future<void> _pickMultiImage(state) async {
+    print('state : '+state.toString());
+    
+    
+      final List<XFile> selectedImages = (await imagePicker.pickMultiImage()).cast<XFile>();
+
+
+        if (selectedImages.isNotEmpty) {
+          setState(() {
+            for (XFile element in selectedImages) {
+              bool isDuplicate = widget.imageFileList!.any((existingElement) => existingElement.path == element.path);
+              print(widget.imageFileList!.length);
+              print(isDuplicate);
+              if (!isDuplicate) {
+                widget.imageFileList!.add(element);
+                widget.afficheCircles.add(false);
+                widget.isSelected.add(true);
+              }
+            }
+          });
+        }
+ 
+  }
+
 
   Future<bool?> _showBackDialog() {
     return showDialog<bool>(
@@ -123,7 +156,7 @@ class _ImageUploadState extends State<ImageUpload> {
         return AlertDialog(
           title: const Text('Attention'),
           content: const Text(
-            "Aucune photo n'a été téléchargé\n Voulez vous vraiment quitter cette page ?",
+            "Aucune photo n'a été téléchargée\n Voulez vous vraiment quitter cette page ?",
           ),
           actions: <Widget>[
             TextButton(
@@ -150,6 +183,11 @@ class _ImageUploadState extends State<ImageUpload> {
     );
   }
 
+  bool _isImageHasSelected() {
+    return widget.isSelected.any((element) => element == true);
+    
+  }
+
   @override
   Widget build(BuildContext context) {
     return PopScope(
@@ -163,6 +201,7 @@ class _ImageUploadState extends State<ImageUpload> {
         } else {
           final bool shouldPop = await _showBackDialog() ?? false;
           if (context.mounted && shouldPop) {
+
             Navigator.pop(context);
           }
         }
@@ -171,8 +210,10 @@ class _ImageUploadState extends State<ImageUpload> {
           appBar: AppBar(
             title: const Text('Liste des documents'),
             actions: [
-              IconButton(onPressed: () {}, icon: const Icon(Icons.add)),
-              IconButton(
+              IconButton(onPressed: () {
+                  _pickMultiImage(false);
+              }, icon: const Icon(Icons.add)),
+              if (_isImageHasSelected()) IconButton(
                   onPressed: () {
                     setState(() {
                       afficheCirclesAll = true;
@@ -181,193 +222,125 @@ class _ImageUploadState extends State<ImageUpload> {
                     sendImageToAPI(widget.imageFileList!, widget.typeDepot,
                         widget.idMission, widget.isSelected);
                   },
-                  icon: const Icon(Icons.import_export)),
+                  icon: const Icon(Icons.import_export) ),
             ],
           ),
-          body: SafeArea(
-            child: Column(
-              children: [
-                Expanded(
-                  child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: widget.imageFileList == null ||
-                              widget.imageFileList!.isEmpty
-                          ? const CenterMessageWidget(
-                              texte:
-                                  'Aucun document sélectionné\n cliquez sur + pour ajouter un document')
-                          : Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Expanded(
-                                  child: GridView.builder(
-                                      itemCount: widget.imageFileList!.length,
-                                      padding: EdgeInsets
-                                          .zero, // Supprime le padding autour du grid
-                                      gridDelegate:
-                                          SliverGridDelegateWithFixedCrossAxisCount(
-                                        crossAxisCount:
-                                            2, // Nombre de colonnes dans le grid
-                                        crossAxisSpacing:
-                                            2.0, // Espacement horizontal entre les cellules
-                                        mainAxisSpacing:
-                                            2.0, // Espacement vertical entre les cellules
-                                        childAspectRatio:
-                                            1.0, // Pour que les cellules soient carrées
-                                      ),
-                                      itemBuilder:
-                                          (BuildContext context, int index) {
-                                        return GestureDetector(
-                                          onTap: () {
-                                            setState(() {
-                                              widget.isSelected[index] =
-                                                  !widget.isSelected[index];
-                                            });
-                                          },
-                                          onLongPress: () {
-                                            showModalBottomSheet(
-                                              context: context,
-                                              builder: (BuildContext context) {
-                                                return SizedBox(
-                                                  height: 200,
-                                                  child: Column(
-                                                    children: <Widget>[
-                                                      ListTile(
-                                                        leading: const Icon(
-                                                            Icons.share),
-                                                        title: const Text(
-                                                            'Télécharger'),
-                                                        onTap: () async {
-                                                          await sendImageToAPISolo(
-                                                              widget
-                                                                  .imageFileList!,
-                                                              widget.typeDepot,
-                                                              widget.idMission,
-                                                              index);
-
-                                                          Navigator.push(
-                                                            // ignore: use_build_context_synchronously
-                                                            context,
-                                                            MaterialPageRoute(
-                                                                builder: (context) => MissionPage(
-                                                                    mission: widget
-                                                                        .idMission,
-                                                                    collecte: widget
-                                                                        .idCollecte,
-                                                                    defaultIndex:
-                                                                        widget
-                                                                            .indexTab)),
-                                                          );
-                                                          Alert.showToast(
-                                                              "Document téléchargé avec succès");
-                                                        },
-                                                      ),
-                                                      ListTile(
-                                                        leading: const Icon(
-                                                            Icons.delete),
-                                                        title: const Text(
-                                                            'Supprimer'),
-                                                        onTap: () {
-                                                          setState(() {
-                                                            widget
-                                                                .imageFileList!
-                                                                .removeAt(
-                                                                    index);
-                                                            widget
-                                                                .afficheCircles
-                                                                .removeAt(
-                                                                    index);
-                                                            widget.isSelected
-                                                                .removeAt(
-                                                                    index);
-                                                          });
-                                                          // Action pour supprimer
-                                                          Navigator.pop(
-                                                              context);
-                                                          Alert.showToast(
-                                                              "Image retirée avec succès");
-                                                        },
-                                                      ),
-                                                    ],
+          body:SafeArea(
+              child: Column(
+                children: [
+                  Expanded(
+                    child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: widget.imageFileList == null ||
+                                widget.imageFileList!.isEmpty
+                            ? const CenterMessageWidget(
+                                texte:
+                                    'Aucun document sélectionné\n cliquez sur + pour ajouter un document')
+                            : Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Expanded(
+                                    child: GridView.builder(
+                                        itemCount: widget.imageFileList!.length,
+                                        padding: EdgeInsets
+                                            .zero, // Supprime le padding autour du grid
+                                        gridDelegate:
+                                            const SliverGridDelegateWithFixedCrossAxisCount(
+                                          crossAxisCount:
+                                              2, // Nombre de colonnes dans le grid
+                                          crossAxisSpacing:
+                                              2.0, // Espacement horizontal entre les cellules
+                                          mainAxisSpacing:
+                                              2.0, // Espacement vertical entre les cellules
+                                          childAspectRatio:
+                                              1.0, // Pour que les cellules soient carrées
+                                        ),
+                                        itemBuilder:
+                                            (BuildContext context, int index) {
+                                          return GestureDetector(
+                                            onTap: () {
+                                              setState(() {
+                                                widget.isSelected[index] =
+                                                    !widget.isSelected[index];
+                                              });
+                                            },
+                                            
+                                            child: Stack(
+                                              alignment: Alignment.center,
+                                              children: [
+                                                Opacity(
+                                                  opacity:
+                                                      (!widget.afficheCircles[
+                                                                  index] &&
+                                                              afficheCirclesAll)
+                                                          ? 0.5
+                                                          : 1,
+                                                  child: Image.file(
+                                                    File(widget
+                                                        .imageFileList![index]
+                                                        .path),
+                                                    fit: BoxFit
+                                                        .cover, // L'image couvre toute la cellule
+                                                    width: double.infinity,
+                                                    height: double.infinity,
                                                   ),
-                                                );
-                                              },
-                                            );
-                                          },
-                                          child: Stack(
-                                            alignment: Alignment.center,
-                                            children: [
-                                              Opacity(
-                                                opacity:
-                                                    (!widget.afficheCircles[
-                                                                index] &&
-                                                            afficheCirclesAll)
-                                                        ? 0.5
-                                                        : 1,
-                                                child: Image.file(
-                                                  File(widget
-                                                      .imageFileList![index]
-                                                      .path),
-                                                  fit: BoxFit
-                                                      .cover, // L'image couvre toute la cellule
-                                                  width: double.infinity,
-                                                  height: double.infinity,
                                                 ),
-                                              ),
-                                              if (widget.afficheCircles[index])
-                                                const CircularProgressIndicator(),
-                                              Positioned(
-                                                top: 8.0,
-                                                right: 8.0,
-                                                child: GestureDetector(
-                                                  onTap: () {
-                                                    setState(() {
-                                                      widget.isSelected[index] =
-                                                          !widget.isSelected[
-                                                              index];
-                                                    });
-                                                  },
-                                                  child: Container(
-                                                    decoration: BoxDecoration(
-                                                      shape: BoxShape.circle,
-                                                      color: widget
-                                                              .isSelected[index]
-                                                          ? Colors.blue
-                                                          : Colors.white,
-                                                      border: Border.all(
-                                                        color: Colors.blue,
+                                                if (widget.afficheCircles[index])
+                                                  const CircularProgressIndicator(),
+                                                Positioned(
+                                                  top: 8.0,
+                                                  right: 8.0,
+                                                  child: GestureDetector(
+                                                    onTap: () {
+                                                      setState(() {
+                                                        widget.isSelected[index] =
+                                                            !widget.isSelected[
+                                                                index];
+                                                      });
+                                                    },
+                                                    child: Container(
+                                                      decoration: BoxDecoration(
+                                                        shape: BoxShape.circle,
+                                                        color: widget
+                                                                .isSelected[index]
+                                                            ? Colors.blue
+                                                            : Colors.white,
+                                                        border: Border.all(
+                                                          color: Colors.blue,
+                                                        ),
                                                       ),
-                                                    ),
-                                                    child: Padding(
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                              4.0),
-                                                      child: Icon(
-                                                        widget.isSelected[index]
-                                                            ? Icons.check
-                                                            : Icons
-                                                                .radio_button_unchecked,
-                                                        color:
-                                                            widget.isSelected[
-                                                                    index]
-                                                                ? Colors.white
-                                                                : Colors.blue,
-                                                        size: 20.0,
+                                                      child: Padding(
+                                                        padding:
+                                                            const EdgeInsets.all(
+                                                                4.0),
+                                                        child: Icon(
+                                                          widget.isSelected[index]
+                                                              ? Icons.check
+                                                              : Icons
+                                                                  .radio_button_unchecked,
+                                                          color:
+                                                              widget.isSelected[
+                                                                      index]
+                                                                  ? Colors.white
+                                                                  : Colors.blue,
+                                                          size: 20.0,
+                                                        ),
                                                       ),
                                                     ),
                                                   ),
                                                 ),
-                                              ),
-                                            ],
-                                          ),
-                                        );
-                                      }),
-                                ),
-                              ],
-                            )),
-                ),
-              ],
+                                              ],
+                                            ),
+                                          );
+                                        }),
+                                  ),
+                                ],
+                              )),
+                  ),
+                ],
+              ),
             ),
-          )),
-    );
+          ));
+   
   }
 }

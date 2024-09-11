@@ -46,19 +46,32 @@ class _DepotsViewState extends State<DepotsView> {
     return missions;
   }
 
-  Future<void> _pickMultiImage() async {
-    final List<XFile> selectedImages =
-        (await imagePicker.pickMultiImage()).cast<XFile>();
-    if (selectedImages.isNotEmpty) {
-      imageFileList!.addAll(selectedImages);
-    }
-    setState(() {
-      // ignore: unused_local_variable
-      for (XFile element in selectedImages) {
-        afficheCircles.add(false);
-        isSelected.add(true);
+  Future<void> _pickMultiImage(state) async {
+    print('state : '+state.toString());
+    
+    
+      final List<XFile> selectedImages = (await imagePicker.pickMultiImage()).cast<XFile>();
+      if (state) {
+        setState(() {
+          imageFileList = [];
+          afficheCircles = [];
+          isSelected = [];
+        });        
       }
-    });
+
+        if (selectedImages.isNotEmpty) {
+          setState(() {
+            for (XFile element in selectedImages) {
+              bool isDuplicate = imageFileList!.any((existingElement) => existingElement.path == element.path);
+              if (!isDuplicate) {
+                imageFileList!.add(element);
+                afficheCircles.add(false);
+                isSelected.add(true);
+              }
+            }
+          });
+        }
+ 
   }
 
   @override
@@ -119,7 +132,7 @@ class _DepotsViewState extends State<DepotsView> {
                   style: TextStyle(color: Colors.white),
                 ),
                 onTap: () {
-                  _pickMultiImage().then((value) async {
+                  _pickMultiImage(true).then((value) async {
                     if (imageFileList!.isEmpty) {
                       Navigator.pop(context);
                     } else {
@@ -132,10 +145,19 @@ class _DepotsViewState extends State<DepotsView> {
                               idCollecte: widget.collecte,
                               imageFileList: imageFileList,
                               afficheCircles: afficheCircles,
-                              isSelected: isSelected,
-                              indexTab: 1),
+                              isSelected: isSelected,                              
+                              indexTab: 1,
+                              pickMultiImage: _pickMultiImage
+                              ),
                         ),
                       );
+                      if (result == null) {
+                        setState(() {
+                              imageFileList = [];
+                              afficheCircles = [];
+                              isSelected = [];                          
+                        });
+                      }
 
                       if (result != null && result == 1) {
                         setState(() async {
@@ -143,6 +165,7 @@ class _DepotsViewState extends State<DepotsView> {
                             setState(() {
                               depots = value;
                               isLoading = false;
+
                             });
                           });
                         });
