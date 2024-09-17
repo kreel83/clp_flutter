@@ -28,7 +28,6 @@ class DepotsView extends StatefulWidget {
 
 class _DepotsViewState extends State<DepotsView> {
   String base64Image = "";
-  get http => null;
   List<Depot> depots = [];
   bool isLoading = true;
   ///////////////////////
@@ -37,8 +36,6 @@ class _DepotsViewState extends State<DepotsView> {
   List<bool> afficheCircles = [];
   List<bool> isSelected = [];
   bool afficheCirclesAll = false;
-  PersistentBottomSheetController? _bottomSheetController;
-
   ////////////////////////////////
 
   Future<List<Depot>> getDeps(mission) async {
@@ -46,32 +43,23 @@ class _DepotsViewState extends State<DepotsView> {
     return missions;
   }
 
-  Future<void> _pickMultiImage(state) async {
-    print('state : '+state.toString());
-    
-    
-      final List<XFile> selectedImages = (await imagePicker.pickMultiImage()).cast<XFile>();
-      if (state) {
-        setState(() {
-          imageFileList = [];
-          afficheCircles = [];
-          isSelected = [];
-        });        
-      }
-
-        if (selectedImages.isNotEmpty) {
-          setState(() {
-            for (XFile element in selectedImages) {
-              bool isDuplicate = imageFileList!.any((existingElement) => existingElement.path == element.path);
-              if (!isDuplicate) {
-                imageFileList!.add(element);
-                afficheCircles.add(false);
-                isSelected.add(true);
-              }
-            }
-          });
+  Future<void> _pickMultiImage(reload) async {
+    if (reload) {
+      isSelected.clear();
+      imageFileList!.clear();
+    }
+    final List<XFile> selectedImages =
+        (await imagePicker.pickMultiImage()).cast<XFile>();
+    if (selectedImages.isNotEmpty) {
+      setState(() {
+        imageFileList!.addAll(selectedImages);
+        for (XFile element in selectedImages) {
+          afficheCircles.add(false);
+          isSelected.add(true);
         }
- 
+      });
+    }
+
   }
 
   @override
@@ -88,7 +76,7 @@ class _DepotsViewState extends State<DepotsView> {
   Future<void> _pickImage(BuildContext context) async {
     var state =
         await takePicture(widget.mission, widget.collecte, 'depots', context);
-    print('state : ' + state.toString());
+
     if (state) {
       await getDeps(widget.mission).then((value) {
         setState(() {
@@ -103,7 +91,7 @@ class _DepotsViewState extends State<DepotsView> {
   }
 
   void _showBottomSheet(BuildContext context) {
-    _bottomSheetController = Scaffold.of(context).showBottomSheet(
+    Scaffold.of(context).showBottomSheet(
       (context) {
         return Container(
           height: 200,
@@ -118,7 +106,7 @@ class _DepotsViewState extends State<DepotsView> {
                 title: const Text("A partir de l'appareil photo",
                     style: TextStyle(color: Colors.white)),
                 onTap: () async {
-                  _bottomSheetController!.close();
+                  Navigator.pop(context);
                   _pickImage(context);
                 },
               ),
@@ -136,7 +124,8 @@ class _DepotsViewState extends State<DepotsView> {
                     if (imageFileList!.isEmpty) {
                       Navigator.pop(context);
                     } else {
-                      final int? result = await Navigator.push(
+                      Navigator.pop(context);
+                      Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (context) => ImageUpload(
@@ -145,31 +134,26 @@ class _DepotsViewState extends State<DepotsView> {
                               idCollecte: widget.collecte,
                               imageFileList: imageFileList,
                               afficheCircles: afficheCircles,
-                              isSelected: isSelected,                              
-                              indexTab: 1,
-                              pickMultiImage: _pickMultiImage
-                              ),
-                        ),
-                      );
-                      if (result == null) {
-                        setState(() {
-                              imageFileList = [];
-                              afficheCircles = [];
-                              isSelected = [];                          
-                        });
-                      }
 
-                      if (result != null && result == 1) {
-                        setState(() async {
+                              isSelected: isSelected,
+                              indexTab: 2),
+                        ),
+                      ).then((onValue) async {
+                        if (onValue == true) {
+
                           await getDeps(widget.mission).then((value) {
                             setState(() {
                               depots = value;
                               isLoading = false;
 
                             });
+                            Alert.showToast(
+                                'Document(s) ajouté(s) avec succés');
                           });
-                        });
-                      }
+                        } else {
+                          Alert.showToast("L'action a été annulée");
+                        }
+                      });
                     }
                   });
                 },

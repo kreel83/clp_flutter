@@ -35,9 +35,6 @@ class _CollectesState extends State<Collectes> {
   bool isLoadedCollectes = false;
 
   bool hasNonOneStatus(List<Collecte> collectionFuture) {
-    // Wait for the future containing the collection to complete
-    // final collection = await collectionFuture;
-    // print(collection);
     return collectionFuture.any((collecte) => collecte.statut == 1);
   }
 
@@ -254,7 +251,7 @@ class _CollectesState extends State<Collectes> {
     // Vous pouvez rediriger l'utilisateur vers l'écran de connexion
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => LogInScreen()),
+      MaterialPageRoute(builder: (context) => const LogInScreen()),
     );
   }
 
@@ -266,7 +263,7 @@ class _CollectesState extends State<Collectes> {
         title: const Text('Liste des collectes'),
         actions: [
           IconButton(
-            icon: Icon(Icons.power_settings_new),
+            icon: const Icon(Icons.power_settings_new),
             onPressed: () {
               _logout(context);
             },
@@ -295,7 +292,6 @@ class _CollectesState extends State<Collectes> {
                   .shrink(); // Hide the button if there's an element with status 1
             }
           } else if (snapshot.hasError) {
-            // print('Error: ${snapshot.error}');
             return const SizedBox.shrink(); // Or you can show an error widget
           }
 

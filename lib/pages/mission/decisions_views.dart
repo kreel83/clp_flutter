@@ -43,30 +43,21 @@ class _DecisionsViewState extends State<DecisionsView> {
     return missions;
   }
 
-  Future<void> _pickMultiImage(state) async {
-      if (state) {
-        setState(() {
-          imageFileList = [];
-          afficheCircles = [];
-          isSelected = [];
-        });        
-      }
+
+  Future<void> _pickMultiImage() async {
+    imageFileList!.clear();
     final List<XFile> selectedImages =
         (await imagePicker.pickMultiImage()).cast<XFile>();
-        print('state : '+selectedImages.length.toString());
-        if (selectedImages.isNotEmpty) {
-          setState(() {
-            for (XFile element in selectedImages) {
-              bool isDuplicate = imageFileList!.any((existingElement) => existingElement.path == element.path);
-              if (!isDuplicate) {
-                print('coucou');
-                imageFileList!.add(element);
-                afficheCircles.add(false);
-                isSelected.add(true);
-              }
-            }
-          });
+    if (selectedImages.isNotEmpty) {
+      setState(() {
+        imageFileList!.addAll(selectedImages);
+        for (XFile element in selectedImages) {
+          afficheCircles.add(false);
+          isSelected.add(true);
         }
+      });
+    }
+
   }
 
   @override
@@ -139,7 +130,8 @@ class _DecisionsViewState extends State<DecisionsView> {
                                   if (imageFileList!.isEmpty) {
                                     Navigator.pop(context);
                                   } else {
-                                    await Navigator.push(
+                                    Navigator.pop(context);
+                                    Navigator.push(
                                       context,
                                       MaterialPageRoute(
                                         builder: (context) => ImageUpload(
@@ -153,7 +145,22 @@ class _DecisionsViewState extends State<DecisionsView> {
                                             pickMultiImage: _pickMultiImage
                                             ),
                                       ),
-                                    );
+                                    ).then((onValue) async {
+                                      if (onValue == true) {
+                                        await getDeps(widget.mission)
+                                            .then((value) {
+                                          setState(() {
+                                            decisions = value;
+                                            isLoading = false;
+                                          });
+                                          Alert.showToast(
+                                              'Document(s) ajouté(s) avec succés');
+                                        });
+                                      } else {
+                                        Alert.showToast(
+                                            "L'action a été annulée");
+                                      }
+                                    });
                                   }
                                 });
                               },

@@ -108,7 +108,6 @@ class _MissionsState extends State<Missions> {
                     padding: const EdgeInsets.all(8.0),
                     itemCount: ListeDesMissionsAAfficher.length,
                     itemBuilder: (BuildContext context, int index) {
-                      print(ListeDesMissionsAAfficher[index].parcelle);
                       return SizedBox(
                         child: Card(
                           child: Slidable(
@@ -118,7 +117,6 @@ class _MissionsState extends State<Missions> {
                               children: [
                                 SlidableAction(
                                   onPressed: (context) {
-                                    print('map:' + missions[index].map);
                                     _lancerGoogleMap(missions[index].map);
                                   },
                                   backgroundColor: Color(
@@ -130,23 +128,21 @@ class _MissionsState extends State<Missions> {
                                   icon: Icons.map,
                                   label: 'google map',
                                 ),
-                                if (ListeDesMissionsAAfficher[index].parcelle ==
-                                    "true")
-                                  SlidableAction(
-                                    onPressed: (context) {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) => CarteMapboxPage(
-                                                  mission:
-                                                      ListeDesMissionsAAfficher[
-                                                          index])));
-                                    },
-                                    backgroundColor: Colors.amber.shade200,
-                                    foregroundColor: Colors.white,
-                                    icon: Icons.map,
-                                    label: 'map box',
-                                  ),
+                                SlidableAction(
+                                  onPressed: (context) {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => CarteMapboxPage(
+                                                mission:
+                                                    ListeDesMissionsAAfficher[
+                                                        index])));
+                                  },
+                                  backgroundColor: Colors.amber.shade200,
+                                  foregroundColor: Colors.white,
+                                  icon: Icons.map,
+                                  label: 'map box',
+                                ),
                               ],
                             ),
                             endActionPane: ListeDesMissionsAAfficher[index]

@@ -7,8 +7,6 @@ class MissionsService {
   List<Mission> parseMissions(String responseBody) {
     final p = jsonDecode(responseBody)['missions'];
     final parsed = p.cast<Map<String, dynamic>>();
-
-    print(parsed.toString());
     return parsed.map<Mission>((json) => Mission.fromJson(json)).toList();
   }
 
