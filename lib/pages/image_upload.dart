@@ -22,7 +22,9 @@ class ImageUpload extends StatefulWidget {
       required this.imageFileList,
       required this.afficheCircles,
       required this.isSelected,
-      required this.indexTab});
+      required this.indexTab,
+      required this.pickMultiImage,
+      });
 
   var imageFileList;
   final afficheCircles;
@@ -31,7 +33,9 @@ class ImageUpload extends StatefulWidget {
   final idMission;
   final idCollecte;
   final indexTab;
+
   final ImagePicker imagePicker = ImagePicker();
+
 
   @override
 // ignore: library_private_types_in_public_api
@@ -41,6 +45,7 @@ class ImageUpload extends StatefulWidget {
 class _ImageUploadState extends State<ImageUpload> {
   bool afficheCirclesAll = false;
   bool isRecord = false;
+
   final ImagePicker imagePicker = ImagePicker();
 
   Future<void> _pickMultiImage() async {
@@ -65,6 +70,7 @@ class _ImageUploadState extends State<ImageUpload> {
       });
     }
   }
+
 
   sendImageToAPI(List<XFile> imageFile, typeDepot, mission, isSelected) async {
     var uri = Uri.parse(
@@ -140,7 +146,11 @@ class _ImageUploadState extends State<ImageUpload> {
   @override
   void initState() {
     super.initState();
+    setState(() {
+      
+    });
   }
+
 
   Future<bool?> _showBackDialog() {
     return showDialog<bool>(
@@ -149,7 +159,7 @@ class _ImageUploadState extends State<ImageUpload> {
         return AlertDialog(
           title: const Text('Attention'),
           content: const Text(
-            "Aucune photo n'a été téléchargé\n Voulez vous vraiment quitter cette page ?",
+            "Aucune photo n'a été téléchargée\n Voulez vous vraiment quitter cette page ?",
           ),
           actions: <Widget>[
             TextButton(
@@ -176,6 +186,11 @@ class _ImageUploadState extends State<ImageUpload> {
     );
   }
 
+  bool _isImageHasSelected() {
+    return widget.isSelected.any((element) => element == true);
+    
+  }
+
   @override
   Widget build(BuildContext context) {
     return PopScope(
@@ -189,6 +204,7 @@ class _ImageUploadState extends State<ImageUpload> {
         } else {
           final bool shouldPop = await _showBackDialog() ?? false;
           if (context.mounted && shouldPop) {
+
             Navigator.pop(context);
           }
         }
@@ -202,6 +218,7 @@ class _ImageUploadState extends State<ImageUpload> {
           ),
           appBar: AppBar(
             actions: [
+
               GestureDetector(
                 onTap: () async {
                   await sendImageToAPI(widget.imageFileList!, widget.typeDepot,
@@ -323,22 +340,23 @@ class _ImageUploadState extends State<ImageUpload> {
                                                                 ? Colors.white
                                                                 : Colors.white,
                                                         size: 20.0,
+
                                                       ),
                                                     ),
                                                   ),
                                                 ),
-                                              ),
-                                            ],
-                                          ),
-                                        );
-                                      }),
-                                ),
-                              ],
-                            )),
-                ),
-              ],
+                                              ],
+                                            ),
+                                          );
+                                        }),
+                                  ),
+                                ],
+                              )),
+                  ),
+                ],
+              ),
             ),
-          )),
-    );
+          ));
+   
   }
 }

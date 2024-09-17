@@ -43,6 +43,7 @@ class _DecisionsViewState extends State<DecisionsView> {
     return missions;
   }
 
+
   Future<void> _pickMultiImage() async {
     imageFileList!.clear();
     final List<XFile> selectedImages =
@@ -56,6 +57,7 @@ class _DecisionsViewState extends State<DecisionsView> {
         }
       });
     }
+
   }
 
   @override
@@ -124,7 +126,7 @@ class _DecisionsViewState extends State<DecisionsView> {
                                 style: TextStyle(color: Colors.white),
                               ),
                               onTap: () {
-                                _pickMultiImage().then((value) async {
+                                _pickMultiImage(true).then((value) async {
                                   if (imageFileList!.isEmpty) {
                                     Navigator.pop(context);
                                   } else {
@@ -139,7 +141,9 @@ class _DecisionsViewState extends State<DecisionsView> {
                                             imageFileList: imageFileList,
                                             afficheCircles: afficheCircles,
                                             isSelected: isSelected,
-                                            indexTab: 2),
+                                            indexTab: 2,
+                                            pickMultiImage: _pickMultiImage
+                                            ),
                                       ),
                                     ).then((onValue) async {
                                       if (onValue == true) {

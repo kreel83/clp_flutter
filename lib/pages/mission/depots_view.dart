@@ -59,6 +59,7 @@ class _DepotsViewState extends State<DepotsView> {
         }
       });
     }
+
   }
 
   @override
@@ -133,15 +134,18 @@ class _DepotsViewState extends State<DepotsView> {
                               idCollecte: widget.collecte,
                               imageFileList: imageFileList,
                               afficheCircles: afficheCircles,
+
                               isSelected: isSelected,
                               indexTab: 2),
                         ),
                       ).then((onValue) async {
                         if (onValue == true) {
+
                           await getDeps(widget.mission).then((value) {
                             setState(() {
                               depots = value;
                               isLoading = false;
+
                             });
                             Alert.showToast(
                                 'Document(s) ajouté(s) avec succés');
