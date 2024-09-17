@@ -21,7 +21,6 @@ class _CarteMapboxPageState extends State<CarteMapboxPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     List<String> parties = widget.mission.coords!.split(',');
 
@@ -36,9 +35,9 @@ class _CarteMapboxPageState extends State<CarteMapboxPage> {
     _controller?.addSymbol(
       SymbolOptions(
         geometry: position,
-        iconSize: 2.0,
+        iconSize: 0.7,
         iconImage:
-            "assets/icon.png", // Remplacez par votre propre icône si nécessaire
+            "assets/images/marker.png", // Utilise l'icône de marqueur par défaut de Mapbox
         iconAnchor: "bottom",
       ),
     );
@@ -49,8 +48,10 @@ class _CarteMapboxPageState extends State<CarteMapboxPage> {
     _controller = controller;
 
     // Ajout des cercles dans les différents layers avec un délai pour chaque groupe
-    Future.delayed(Duration(seconds: 1), () => _addPolygon(controller));
-    Future.delayed(Duration(seconds: 2), () => _ajouterMarqueur(_centreCarte));
+    Future.delayed(
+        const Duration(milliseconds: 500), () => _addPolygon(controller));
+    Future.delayed(const Duration(milliseconds: 500),
+        () => _ajouterMarqueur(_centreCarte));
   }
 
   LatLngBounds calculateBounds(List<LatLng> polygonCoords) {
@@ -93,17 +94,17 @@ class _CarteMapboxPageState extends State<CarteMapboxPage> {
 
   void addPolygonsToMap(
       List<PolygonData> polygonsData, MapboxMapController controller) {
-    polygonsData.forEach((polygon) {
+    for (var polygon in polygonsData) {
       List<LatLng> polygonCoords = polygon.toLatLngList();
       controller.addFill(
         FillOptions(
           geometry: [polygon.toLatLngList()], // Liste des coordonnées LatLng
-          fillColor: '#FF0000', // Couleur du polygone
+          fillColor: '#FFFF00', // Couleur du polygone
           fillOpacity: 0.5, // Opacité du polygone
         ),
       );
       centerMapOnPolygon(controller, polygonCoords);
-    });
+    }
   }
 
   void _addPolygon(controller) async {
@@ -122,8 +123,6 @@ class _CarteMapboxPageState extends State<CarteMapboxPage> {
       List<dynamic> jsonData = await jsonDecode(response.body);
       List<PolygonData> polygonsData = parsePolygonData(jsonData);
       addPolygonsToMap(polygonsData, controller);
-    } else {
-      print(response.statusCode);
     }
   }
 
@@ -131,9 +130,10 @@ class _CarteMapboxPageState extends State<CarteMapboxPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Carte avec Polygone et Cercles'),
+        title: const Text('Géolocalisation du projet'),
       ),
       body: MapboxMap(
+        trackCameraPosition: true,
         accessToken:
             "pk.eyJ1IjoidmVpbGxlY28iLCJhIjoiY2tmbzFmNnJ4MDNibzJwcGZrb3psanhqMSJ9.Y-zA_n-3WWfvNDPfDYOISA", // Remplace par ton token
         onMapCreated: _onMapCreated,

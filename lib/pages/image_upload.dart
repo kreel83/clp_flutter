@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_typing_uninitialized_variables
 
 import 'dart:io';
+import 'package:clp_flutter/models/depot.dart';
 import 'package:clp_flutter/pages/mission_page.dart';
 import 'package:clp_flutter/utils/message.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +10,7 @@ import 'dart:convert';
 import '../../globals.dart' as globals;
 import '../utils/alert.dart';
 import 'package:http/http.dart' as http;
+import 'package:path/path.dart' as path;
 
 // ignore: must_be_immutable
 class ImageUpload extends StatefulWidget {
@@ -29,6 +31,7 @@ class ImageUpload extends StatefulWidget {
   final idMission;
   final idCollecte;
   final indexTab;
+  final ImagePicker imagePicker = ImagePicker();
 
   @override
 // ignore: library_private_types_in_public_api
@@ -38,11 +41,36 @@ class ImageUpload extends StatefulWidget {
 class _ImageUploadState extends State<ImageUpload> {
   bool afficheCirclesAll = false;
   bool isRecord = false;
+  final ImagePicker imagePicker = ImagePicker();
+
+  Future<void> _pickMultiImage() async {
+    var liste = widget.imageFileList!.map((xfile) {
+      return path.basename(xfile.path);
+    }).toList();
+
+    final List<XFile> selectedImages =
+        (await imagePicker.pickMultiImage()).cast<XFile>();
+
+    print(liste.toString());
+
+    if (selectedImages.isNotEmpty) {
+      setState(() {
+        for (var el in selectedImages) {
+          if (!liste.contains(path.basename(el.path))) {
+            widget.imageFileList!.add(el);
+            widget.afficheCircles.add(false);
+            widget.isSelected.add(true);
+          }
+        }
+      });
+    }
+  }
 
   sendImageToAPI(List<XFile> imageFile, typeDepot, mission, isSelected) async {
     var uri = Uri.parse(
         'https://www.la-gazette-eco.fr/api/clp/mission/setPicture'); // Replace with your API endpoint
     var index = 0;
+
     for (XFile e in widget.imageFileList!) {
       if (isSelected[index]) {
         var request = http.MultipartRequest('POST', uri);
@@ -114,8 +142,6 @@ class _ImageUploadState extends State<ImageUpload> {
     super.initState();
   }
 
-  bool _condition = false; // Condition que vous souhaitez vérifier
-
   Future<bool?> _showBackDialog() {
     return showDialog<bool>(
       context: context,
@@ -168,20 +194,36 @@ class _ImageUploadState extends State<ImageUpload> {
         }
       },
       child: Scaffold(
+          floatingActionButton: FloatingActionButton(
+            child: const Icon(Icons.add),
+            onPressed: () {
+              _pickMultiImage();
+            },
+          ),
           appBar: AppBar(
-            title: const Text('Liste des documents'),
             actions: [
-              IconButton(onPressed: () {}, icon: const Icon(Icons.add)),
-              IconButton(
-                  onPressed: () {
-                    setState(() {
-                      afficheCirclesAll = true;
-                      isRecord = true;
-                    });
-                    sendImageToAPI(widget.imageFileList!, widget.typeDepot,
-                        widget.idMission, widget.isSelected);
-                  },
-                  icon: const Icon(Icons.import_export)),
+              GestureDetector(
+                onTap: () async {
+                  await sendImageToAPI(widget.imageFileList!, widget.typeDepot,
+                      widget.idMission, widget.isSelected);
+                  // ignore: use_build_context_synchronously
+                  Navigator.pop(context, true);
+                },
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 10),
+                  child: Center(
+                    child: !widget.isSelected.every((item) => item == false)
+                        ? const Text(
+                            'Importer la sélection',
+                            style: TextStyle(
+                                fontSize: 14,
+                                color:
+                                    Colors.white), // Taille du texte ajustable
+                          )
+                        : null,
+                  ),
+                ),
+              ),
             ],
           ),
           body: SafeArea(
@@ -204,7 +246,7 @@ class _ImageUploadState extends State<ImageUpload> {
                                       padding: EdgeInsets
                                           .zero, // Supprime le padding autour du grid
                                       gridDelegate:
-                                          SliverGridDelegateWithFixedCrossAxisCount(
+                                          const SliverGridDelegateWithFixedCrossAxisCount(
                                         crossAxisCount:
                                             2, // Nombre de colonnes dans le grid
                                         crossAxisSpacing:
@@ -222,76 +264,6 @@ class _ImageUploadState extends State<ImageUpload> {
                                               widget.isSelected[index] =
                                                   !widget.isSelected[index];
                                             });
-                                          },
-                                          onLongPress: () {
-                                            showModalBottomSheet(
-                                              context: context,
-                                              builder: (BuildContext context) {
-                                                return SizedBox(
-                                                  height: 200,
-                                                  child: Column(
-                                                    children: <Widget>[
-                                                      ListTile(
-                                                        leading: const Icon(
-                                                            Icons.share),
-                                                        title: const Text(
-                                                            'Télécharger'),
-                                                        onTap: () async {
-                                                          await sendImageToAPISolo(
-                                                              widget
-                                                                  .imageFileList!,
-                                                              widget.typeDepot,
-                                                              widget.idMission,
-                                                              index);
-
-                                                          Navigator.push(
-                                                            // ignore: use_build_context_synchronously
-                                                            context,
-                                                            MaterialPageRoute(
-                                                                builder: (context) => MissionPage(
-                                                                    mission: widget
-                                                                        .idMission,
-                                                                    collecte: widget
-                                                                        .idCollecte,
-                                                                    defaultIndex:
-                                                                        widget
-                                                                            .indexTab)),
-                                                          );
-                                                          Alert.showToast(
-                                                              "Document téléchargé avec succès");
-                                                        },
-                                                      ),
-                                                      ListTile(
-                                                        leading: const Icon(
-                                                            Icons.delete),
-                                                        title: const Text(
-                                                            'Supprimer'),
-                                                        onTap: () {
-                                                          setState(() {
-                                                            widget
-                                                                .imageFileList!
-                                                                .removeAt(
-                                                                    index);
-                                                            widget
-                                                                .afficheCircles
-                                                                .removeAt(
-                                                                    index);
-                                                            widget.isSelected
-                                                                .removeAt(
-                                                                    index);
-                                                          });
-                                                          // Action pour supprimer
-                                                          Navigator.pop(
-                                                              context);
-                                                          Alert.showToast(
-                                                              "Image retirée avec succès");
-                                                        },
-                                                      ),
-                                                    ],
-                                                  ),
-                                                );
-                                              },
-                                            );
                                           },
                                           child: Stack(
                                             alignment: Alignment.center,
@@ -332,9 +304,9 @@ class _ImageUploadState extends State<ImageUpload> {
                                                       color: widget
                                                               .isSelected[index]
                                                           ? Colors.blue
-                                                          : Colors.white,
+                                                          : Colors.red,
                                                       border: Border.all(
-                                                        color: Colors.blue,
+                                                        color: Colors.white,
                                                       ),
                                                     ),
                                                     child: Padding(
@@ -344,13 +316,12 @@ class _ImageUploadState extends State<ImageUpload> {
                                                       child: Icon(
                                                         widget.isSelected[index]
                                                             ? Icons.check
-                                                            : Icons
-                                                                .radio_button_unchecked,
+                                                            : null,
                                                         color:
                                                             widget.isSelected[
                                                                     index]
                                                                 ? Colors.white
-                                                                : Colors.blue,
+                                                                : Colors.white,
                                                         size: 20.0,
                                                       ),
                                                     ),

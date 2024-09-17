@@ -52,8 +52,6 @@ class _ForgetPasswordScreen extends State<ForgetPasswordScreen> {
               duration: const Duration(seconds: 2),
             ),
           );
-        } else {
-          // print('NO NO NON ');
         }
       } catch (e) {
         // print(e.toString());

@@ -136,7 +136,6 @@ class _PhotoPageState extends State<PhotoPage> {
         's/' +
         document;
     final data = Uri.encodeFull(url);
-    print('url : ' + data);
     return data;
   }
 

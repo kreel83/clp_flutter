@@ -44,18 +44,18 @@ class _DecisionsViewState extends State<DecisionsView> {
   }
 
   Future<void> _pickMultiImage() async {
+    imageFileList!.clear();
     final List<XFile> selectedImages =
         (await imagePicker.pickMultiImage()).cast<XFile>();
     if (selectedImages.isNotEmpty) {
-      imageFileList!.addAll(selectedImages);
+      setState(() {
+        imageFileList!.addAll(selectedImages);
+        for (XFile element in selectedImages) {
+          afficheCircles.add(false);
+          isSelected.add(true);
+        }
+      });
     }
-    setState(() {
-      // ignore: unused_local_variable
-      for (XFile element in selectedImages) {
-        afficheCircles.add(false);
-        isSelected.add(true);
-      }
-    });
   }
 
   @override
@@ -128,7 +128,8 @@ class _DecisionsViewState extends State<DecisionsView> {
                                   if (imageFileList!.isEmpty) {
                                     Navigator.pop(context);
                                   } else {
-                                    await Navigator.push(
+                                    Navigator.pop(context);
+                                    Navigator.push(
                                       context,
                                       MaterialPageRoute(
                                         builder: (context) => ImageUpload(
@@ -140,7 +141,22 @@ class _DecisionsViewState extends State<DecisionsView> {
                                             isSelected: isSelected,
                                             indexTab: 2),
                                       ),
-                                    );
+                                    ).then((onValue) async {
+                                      if (onValue == true) {
+                                        await getDeps(widget.mission)
+                                            .then((value) {
+                                          setState(() {
+                                            decisions = value;
+                                            isLoading = false;
+                                          });
+                                          Alert.showToast(
+                                              'Document(s) ajouté(s) avec succés');
+                                        });
+                                      } else {
+                                        Alert.showToast(
+                                            "L'action a été annulée");
+                                      }
+                                    });
                                   }
                                 });
                               },

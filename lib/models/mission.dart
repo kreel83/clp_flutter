@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 class Mission {
   int? id;
   String? statut;
@@ -17,6 +19,11 @@ class Mission {
   int? photos;
   String? parcelle;
   String? coords;
+  String? is_projet;
+  String? projet;
+  String? resume;
+  int? depots;
+  int? decisions;
 
   Mission({
     this.id,
@@ -37,6 +44,10 @@ class Mission {
     this.photos,
     this.parcelle,
     this.coords,
+    this.is_projet,
+    this.projet,
+    this.depots,
+    this.decisions,
   });
 
   Mission.fromJson(Map<String, dynamic> json) {
@@ -58,6 +69,10 @@ class Mission {
     photos = json['photos'];
     parcelle = json['parcelle'];
     coords = json['coords'];
+    is_projet = json['is_projet'];
+    projet = json['projet'];
+    depots = json['depots'];
+    decisions = json['decisions'];
   }
 
   Map<String, dynamic> toJson() {
@@ -81,6 +96,10 @@ class Mission {
     // ignore: unrelated_type_equality_checks
     data['parcelle'] = parcelle;
     data['coords'] = coords;
+    data['is_projet'] = is_projet;
+    data['projet'] = projet;
+    data['depots'] = 0;
+    data['decisions'] = 0;
     return data;
   }
 }

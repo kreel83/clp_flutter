@@ -35,7 +35,7 @@ class _DepartementPageState extends State<DepartementPage> {
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text('Département'),
+              const Text('Département'),
               SizedBox(
                 width: 100.0,
                 child: Center(

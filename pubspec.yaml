@@ -51,6 +51,8 @@ dependencies:
   url_launcher: ^6.2.1
   fluttertoast: ^8.0.9
   mapbox_gl: ^0.16.0
+  permission_handler: ^10.2.0
+  open_file: ^3.5.3
 
   
 
@@ -82,6 +84,7 @@ flutter:
     - assets/images/CLP.png
     - assets/images/mairie.png
     - assets/images/terrain.png
+    - assets/images/marker.png
     
 
   # An image asset can refer to one or more resolution-specific "variants", see
